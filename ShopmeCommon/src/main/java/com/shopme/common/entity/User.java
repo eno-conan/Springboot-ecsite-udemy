@@ -121,4 +121,13 @@ public class User {
 		this.roles.add(role);
 	}
 
+	//Junit実行時、コンソールへの出力情報が以下の形で表示される
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", email=" + email + ", firstName=" + firstName + ", lastName=" + lastName
+				+ ", roles=" + roles + "]";
+	}
+	
+	
+
 }
