@@ -19,7 +19,7 @@ import com.shopme.common.entity.User;
 public class UserRepositoryTests {
 
 	@Autowired
-	private UserRepository userRepo;
+	private UserRepository repo;
 
 	@Autowired
 	private TestEntityManager entityManager;
@@ -30,7 +30,7 @@ public class UserRepositoryTests {
 		User user = new User("test@test.co.jp", "password", "test", "jose");
 		user.addRole(roleAdmin);
 
-		User savedUser = userRepo.save(user);
+		User savedUser = repo.save(user);
 		assertThat(savedUser.getId()).isGreaterThan(0);
 
 	}
@@ -43,43 +43,43 @@ public class UserRepositoryTests {
 		user.addRole(roleEditor);
 		user.addRole(roleAssistant);
 
-		User savedUser = userRepo.save(user);
+		User savedUser = repo.save(user);
 		assertThat(savedUser.getId()).isGreaterThan(0);
 
 	}
 	
 	@Test
 	public void testListAllUsers() {
-		Iterable<User> listUsers =  userRepo.findAll();
+		Iterable<User> listUsers =  repo.findAll();
 		listUsers.forEach(user->System.out.println(user));
 	}
 	
 	@Test
 	public void testGetUserById() {
-		User getUser = userRepo.findById(1).get();
+		User getUser = repo.findById(1).get();
 		System.out.println(getUser);
 		assertThat(getUser).isNotNull();
 	}
 	
 	@Test
 	public void testUpdateUserDetail() {
-		User user = userRepo.findById(1).get();
+		User user = repo.findById(1).get();
 		user.setEnabled(true);
 		user.setEmail("update@gmail.com");
 		
-		userRepo.save(user);
+		repo.save(user);
 	}
 	
 	@Test
 	public void testUpdateUserRole() {
-		User user = userRepo.findById(2).get();
+		User user = repo.findById(2).get();
 		Role roleEditor = new Role(3);
 		Role roleSalesperson = new Role(2);
 		
 		user.getRoles().remove(roleEditor);
 		user.addRole(roleSalesperson);
 		
-		userRepo.save(user);
+		repo.save(user);
 	}
 
 }

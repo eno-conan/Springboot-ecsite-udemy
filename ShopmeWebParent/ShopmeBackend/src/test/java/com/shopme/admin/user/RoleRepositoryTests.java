@@ -19,12 +19,12 @@ import com.shopme.common.entity.Role;
 public class RoleRepositoryTests {
 
 	@Autowired
-	private RoleRepository roleRepo;
+	private RoleRepository repo;
 
 	@Test
 	public void testCreateFirstRole() {
 		Role roleAdmin = new Role("Admin", "manage everything");
-		Role savedRole = roleRepo.save(roleAdmin);
+		Role savedRole = repo.save(roleAdmin);
 		assertThat(savedRole.getId()).isGreaterThan(0);
 	}
 
@@ -34,7 +34,7 @@ public class RoleRepositoryTests {
 		Role roleEditor = new Role("Editor", "manage brand category");
 		Role roleShipper = new Role("Shipper", "view products,price ...");
 		Role roleAssistant = new Role("Assistant", "manage question and reviews");
-		roleRepo.saveAll(List.of(roleSalesPerson, roleEditor, roleShipper, roleAssistant));
+		repo.saveAll(List.of(roleSalesPerson, roleEditor, roleShipper, roleAssistant));
 	}
 
 }
