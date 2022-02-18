@@ -34,7 +34,7 @@ public class UserRepositoryTests {
 		assertThat(savedUser.getId()).isGreaterThan(0);
 
 	}
-	
+
 	@Test
 	public void testCreateNewUserWithTwoRoles() {
 		User user = new User("test2@test.co.jp", "password2", "test2", "Cablera");
@@ -47,39 +47,53 @@ public class UserRepositoryTests {
 		assertThat(savedUser.getId()).isGreaterThan(0);
 
 	}
-	
+
 	@Test
 	public void testListAllUsers() {
-		Iterable<User> listUsers =  repo.findAll();
-		listUsers.forEach(user->System.out.println(user));
+		Iterable<User> listUsers = repo.findAll();
+		listUsers.forEach(user -> System.out.println(user));
 	}
-	
+
 	@Test
 	public void testGetUserById() {
 		User getUser = repo.findById(1).get();
 		System.out.println(getUser);
 		assertThat(getUser).isNotNull();
 	}
-	
+
 	@Test
 	public void testUpdateUserDetail() {
 		User user = repo.findById(1).get();
 		user.setEnabled(true);
 		user.setEmail("update@gmail.com");
-		
+
 		repo.save(user);
 	}
-	
+
 	@Test
 	public void testUpdateUserRole() {
 		User user = repo.findById(2).get();
 		Role roleEditor = new Role(3);
 		Role roleSalesperson = new Role(2);
-		
+
 		user.getRoles().remove(roleEditor);
 		user.addRole(roleSalesperson);
-		
+
 		repo.save(user);
+	}
+
+	@Test
+	public void testDeleteUser() {
+		Integer userId = 2;
+		repo.deleteById(userId);
+	}
+
+	@Test
+	public void testGetUserByEmail() {
+		String email = "update@gmail.com";//DBに存在するemailであればテスト成功
+		User user = repo.getUserByEmail(email);
+
+		assertThat(user).isNotNull();
 	}
 
 }

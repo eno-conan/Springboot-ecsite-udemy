@@ -20,7 +20,8 @@
 		</div>
 
 		<form th:action="@{/users/save}" th:object="${user}" method="post"
-			style="max-width: 700px; margin: 0 auto">
+			style="max-width: 700px; margin: 0 auto"
+			onsubmit="return checkEmailUnique(this)">
 			<!-- styleで横幅調整可能 -->
 			<div class="border border-secondary rounded p-3">
 				<div class="form-group row">
@@ -85,8 +86,27 @@
 		$(document).ready(function() {
 			$("#buttonCancel").on("click", function() {
 				window.location = "[[@{/users}]]";
-			})
-		})
+			});
+		});
+
+		function checkEmailUnique(form) {
+			url = "[[@{/user/check_email}]]";
+			userEmail = $("#email").val();
+			csrfValue = $("input[name='_csrf']").val();
+			console.log(csrfValue);
+			params = {
+				email : userEmail,
+				_csrf : csrfValue
+			};
+			$.post(url, params, function(response) {
+				if (response == "OK") {
+					form.submit();
+				} else if (response == "Duplicated") {
+					alert("Email is Duplicated! " + userEmail);
+				}
+			});
+			return false;
+		}
 	</script>
 </body>
 </html>
