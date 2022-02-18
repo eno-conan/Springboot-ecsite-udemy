@@ -3,6 +3,7 @@ package com.shopme.admin.user;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.shopme.common.entity.Role;
@@ -17,6 +18,9 @@ public class UserService {
 	@Autowired
 	private RoleRepository roleRepo;
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
 	public List<User> listAll() {
 		return (List<User>) userRepo.findAll(); // userRepo.findAll() : <Iterable> User -> Cast List User
 	}
@@ -26,10 +30,16 @@ public class UserService {
 	}
 
 	public void save(User user) {
+		encodePassword(user);
 		User savedInfo = userRepo.save(user);
 		if (savedInfo == null) {
 			System.out.println("not registered any user info");
 		}
+	}
+
+	private void encodePassword(User user) {
+		String encodedPassword = passwordEncoder.encode(user.getPassword());
+		user.setPassword(encodedPassword);
 	}
 
 }
