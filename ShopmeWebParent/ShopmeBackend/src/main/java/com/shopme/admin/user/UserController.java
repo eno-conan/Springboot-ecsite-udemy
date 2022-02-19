@@ -1,21 +1,28 @@
 package com.shopme.admin.user;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.shopme.admin.FileUploadUtil;
 import com.shopme.common.entity.Role;
 import com.shopme.common.entity.User;
 
 @Controller
 public class UserController {
+
+	public static final String UPLOAD_DIR = "user-photo";
 
 	@Autowired
 	private UserService service;
@@ -33,13 +40,13 @@ public class UserController {
 		Page<User> page = service.listAllByPage(pageNum);
 		List<User> users = page.getContent();
 
-		//何件目～何件目までを表示
+		// 何件目～何件目までを表示
 		long startCount = (pageNum - 1) * UserService.USERS_PER_PAGE + 1;
 		long endCount = startCount + UserService.USERS_PER_PAGE - 1;
 		if (endCount > page.getTotalElements()) {
 			endCount = page.getTotalElements();
 		}
-		
+
 		model.addAttribute("currentPage", pageNum);
 		model.addAttribute("totalPages", page.getTotalPages());
 		model.addAttribute("startCount", startCount);
@@ -60,10 +67,16 @@ public class UserController {
 	}
 
 	@PostMapping("/users/save")
-	public String saveUser(User user, RedirectAttributes redirectAttributes) {
+	public String saveUser(User user, RedirectAttributes redirectAttributes,
+			@RequestParam("image") MultipartFile multipartFile) throws IOException {
 		System.out.println(user);
-		service.save(user);
-		redirectAttributes.addFlashAttribute("msg", "success create new user");
+
+		String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());// \と/の違いを吸収するっぽい
+		System.out.println(fileName);
+		FileUploadUtil.saveFile(UPLOAD_DIR, fileName, multipartFile);
+
+//		service.save(user);
+//		redirectAttributes.addFlashAttribute("msg", "success create new user");
 		return "redirect:/users"; // usersのトップページにリダイレクト（再送信を防ぐ目的もあり）
 	}
 
