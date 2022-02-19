@@ -2,18 +2,23 @@ package com.shopme.admin.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.Rollback;
 
 import com.shopme.common.entity.Role;
 import com.shopme.common.entity.User;
 
-@DataJpaTest
+@DataJpaTest(showSql = false)//falseにしておくと、結果が見やすい
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Rollback(false)
 public class UserRepositoryTests {
@@ -90,10 +95,26 @@ public class UserRepositoryTests {
 
 	@Test
 	public void testGetUserByEmail() {
-		String email = "update@gmail.com";//DBに存在するemailであればテスト成功
+		String email = "update@gmail.com";// DBに存在するemailであればテスト成功
 		User user = repo.getUserByEmail(email);
 
 		assertThat(user).isNotNull();
+	}
+
+	@Test
+	public void testListFirstPage() {
+		int pageNumber = 0;
+		int pageSize = 4;
+
+		//ページングで設定した件数分が取得できているか検証		
+		Pageable pageable = PageRequest.of(pageNumber, pageSize);
+		Page<User> page = repo.findAll(pageable);
+
+		List<User> listUsers = page.getContent();
+
+		listUsers.forEach(user -> System.out.println(user));
+
+		assertThat(listUsers.size()).isEqualTo(pageSize);
 	}
 
 }
