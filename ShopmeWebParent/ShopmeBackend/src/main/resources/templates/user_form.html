@@ -76,6 +76,28 @@
 					<input type="submit" value="cancel" class="btn btn-secondary"
 						id="buttonCancel">
 				</div>
+
+				<!-- モーダルウインドウ -->
+				<div class="modal fade text-center" id="modalDialog">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h4 class="modal-title" id="modalTitle">warning</h4>
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+							</div>
+
+							<div class="modal-body">
+								<span id="modalBody"></span>
+							</div>
+
+							<div class="modal-footer">
+								<button type="button" class="btn btn-danger"
+									data-dismiss="modal">Close</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
 			</div>
 		</form>
 
@@ -98,14 +120,31 @@
 				email : userEmail,
 				_csrf : csrfValue
 			};
-			$.post(url, params, function(response) {
-				if (response == "OK") {
-					form.submit();
-				} else if (response == "Duplicated") {
-					alert("Email is Duplicated! " + userEmail);
-				}
+
+			$.post(
+					url,
+					params,
+					function(response) {
+						if (response == "OK") {
+							form.submit();
+						} else if (response == "Duplicated") {
+							/* emailの重複時にモーダル表示 */
+							showModalDialog("Warning", "Email is Duplicated!"
+									+ userEmail);
+						} else {
+							showModalDialog("Error",
+									"Unknown response from server");
+						}
+					}).fail(function() {
+				showModalDialog("Error", "Could not connect server");
 			});
 			return false;
+		}
+
+		function showModalDialog(title, message) {
+			$("#modalTitle").text(title);
+			$("#modalBody").text(message);
+			$("#modalDialog").modal();
 		}
 	</script>
 </body>
