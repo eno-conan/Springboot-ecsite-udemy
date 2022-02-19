@@ -38,12 +38,14 @@ public class UserService {
 		return (List<Role>) roleRepo.findAll();
 	}
 
-	public void save(User user) {
+	public User save(User user) {
 		encodePassword(user);
 		User savedInfo = userRepo.save(user);
 		if (savedInfo == null) {
 			System.out.println("not registered any user info");
+			return null;
 		}
+		return savedInfo;
 	}
 
 	private void encodePassword(User user) {

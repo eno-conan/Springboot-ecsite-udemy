@@ -1,5 +1,6 @@
 package com.shopme.common.entity;
 
+import java.beans.Transient;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,6 +17,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "users")
 public class User {
+
+	public static final String UPLOAD_BASE_DIR = "user-photos";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,11 +44,9 @@ public class User {
 	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles = new HashSet<>();
 
-
-	
 	public User() {
 	}
-	
+
 	public User(String email, String password, String firstName, String lastName) {
 		this.email = email;
 		this.password = password;
@@ -116,18 +117,24 @@ public class User {
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
 	}
-	
+
 	public void addRole(Role role) {
 		this.roles.add(role);
 	}
 
-	//Junit実行時、コンソールへの出力情報が以下の形で表示される
+	// Junit実行時、コンソールへの出力情報が以下の形で表示される
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", email=" + email + ", firstName=" + firstName + ", lastName=" + lastName
 				+ ", roles=" + roles + "]";
 	}
-	
-	
+
+	@Transient
+	public String getPhotosImagePath() {
+		if (this.id == null | this.photos == null) {
+			return "/images/default-user.png";
+		}
+		return "/" + UPLOAD_BASE_DIR + "/" + this.id + "/" + this.photos;
+	}
 
 }

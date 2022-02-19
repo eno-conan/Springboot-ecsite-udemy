@@ -75,7 +75,7 @@
 					<div class="col-sm-8">
 						<input type="file" name="image" id="fileImage" accept="image/png,image/jpg"
 							class="mb-2" /> <img id="thumbnail" alt="Photo"
-							th:src="@{/images/default-user.png}" class="img-fluid">
+							th:src="@{${user.photosImagePath}}" class="img-fluid">
 					</div>
 				</div>
 

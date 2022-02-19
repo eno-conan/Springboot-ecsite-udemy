@@ -40,7 +40,13 @@
 				<tbody>
 					<tr th:each="user:${users}">
 						<td>[[${user.id}]]</td>
-						<td><span class="fas fa-portrait fa-2x icon-dark"></span></td>
+						<td>
+							<!-- th:srcの中身 Entityクラス内でメソッドを用意 --> 
+							<span th:if="${user.photos == null}"
+							class="fas fa-portrait fa-2x icon-dark"></span>
+							<img th:if="${user.photos != null}"
+							th:src="@{${user.photosImagePath}}">
+						</td>
 						<td>[[${user.email}]]</td>
 						<td>[[${user.firstName}]]</td>
 						<td>[[${user.LastName}]]</td>
@@ -68,19 +74,25 @@
 			<nav aria-label="Page navigation example">
 				<ul class="pagination justify-content-center">
 					<!-- th:classを使ってボタンを非活性に -->
-					<li th:class="${currentPage > 1 ? 'page-item':'page-item disabled'}"><a class="page-link"
-						th:href="@{/users/page/1}">First</a></li>
-					<li th:class="${currentPage > 1 ? 'page-item':'page-item disabled'}"><a class="page-link"
+					<li
+						th:class="${currentPage > 1 ? 'page-item':'page-item disabled'}"><a
+						class="page-link" th:href="@{/users/page/1}">First</a></li>
+					<li
+						th:class="${currentPage > 1 ? 'page-item':'page-item disabled'}"><a
+						class="page-link"
 						th:href="@{'/users/page/' + ${currentPage - 1} }">Previous</a></li>
 
 					<li th:class="${currentPage !=i ? 'page-item':'page-item active'}"
 						th:each="i : ${#numbers.sequence(1,totalPages)}"><a
 						class="page-link" th:href="@{'/users/page/' + ${i} }">[[${i}]]</a></li>
 
-					<li th:class="${currentPage < totalPages ? 'page-item':'page-item disabled'}"><a class="page-link"
+					<li
+						th:class="${currentPage < totalPages ? 'page-item':'page-item disabled'}"><a
+						class="page-link"
 						th:href="@{'/users/page/' + ${currentPage + 1} }">Next</a></li>
-					<li th:class="${currentPage < totalPages ? 'page-item':'page-item disabled'}"><a class="page-link"
-						th:href="@{'/users/page/' + ${totalPages} }">Last</a></li>
+					<li
+						th:class="${currentPage < totalPages ? 'page-item':'page-item disabled'}"><a
+						class="page-link" th:href="@{'/users/page/' + ${totalPages} }">Last</a></li>
 				</ul>
 			</nav>
 		</div>

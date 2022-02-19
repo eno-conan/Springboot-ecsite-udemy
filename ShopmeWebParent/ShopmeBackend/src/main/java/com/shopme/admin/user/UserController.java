@@ -22,7 +22,7 @@ import com.shopme.common.entity.User;
 @Controller
 public class UserController {
 
-	public static final String UPLOAD_DIR = "user-photo";
+	public static final String UPLOAD_BASE_DIR = "user-photos";
 
 	@Autowired
 	private UserService service;
@@ -69,14 +69,18 @@ public class UserController {
 	@PostMapping("/users/save")
 	public String saveUser(User user, RedirectAttributes redirectAttributes,
 			@RequestParam("image") MultipartFile multipartFile) throws IOException {
-		System.out.println(user);
+//		System.out.println(user);
 
-		String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());// \と/の違いを吸収するっぽい
-		System.out.println(fileName);
-		FileUploadUtil.saveFile(UPLOAD_DIR, fileName, multipartFile);
+		if (!multipartFile.isEmpty()) {
+			String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());// \と/の違いを吸収するっぽい
+			System.out.println(fileName);
+			user.setPhotos(fileName);
+			User savedUser = service.save(user);
+			String uploadDir = UPLOAD_BASE_DIR + "/" + savedUser.getId();
+			FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+		}
 
-//		service.save(user);
-//		redirectAttributes.addFlashAttribute("msg", "success create new user");
+		redirectAttributes.addFlashAttribute("msg", "success create new user");
 		return "redirect:/users"; // usersのトップページにリダイレクト（再送信を防ぐ目的もあり）
 	}
 
