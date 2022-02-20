@@ -61,6 +61,7 @@ public class UserController {
 		User user = new User();
 		user.setEnabled(true);
 		List<Role> roles = service.listRoles();
+		model.addAttribute("pageTitle", "Create New User");
 		model.addAttribute("roles", roles);
 		model.addAttribute("user", user);
 		return "user_form";
@@ -69,7 +70,6 @@ public class UserController {
 	@PostMapping("/users/save")
 	public String saveUser(User user, RedirectAttributes redirectAttributes,
 			@RequestParam("image") MultipartFile multipartFile) throws IOException {
-//		System.out.println(user);
 
 		if (!multipartFile.isEmpty()) {
 			String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());// \と/の違いを吸収するっぽい
@@ -77,11 +77,32 @@ public class UserController {
 			user.setPhotos(fileName);
 			User savedUser = service.save(user);
 			String uploadDir = UPLOAD_BASE_DIR + "/" + savedUser.getId();
+			//画像を更新する場合、既存の画像は削除
+			FileUploadUtil.cleanDir(uploadDir);
 			FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+		}else {
+			//画像を必須にするのであれば、異なった処理が必要
+			service.save(user);
 		}
+		redirectAttributes.addFlashAttribute("msg", "The user has been saved successfully");
 
-		redirectAttributes.addFlashAttribute("msg", "success create new user");
 		return "redirect:/users"; // usersのトップページにリダイレクト（再送信を防ぐ目的もあり）
+	}
+
+	@GetMapping("/users/edit/{id}")
+	public String editUser(@PathVariable(name = "id") Integer id, Model model, RedirectAttributes redirectAttributes) {
+		try {
+			User user = service.getUserById(id);
+			List<Role> roles = service.listRoles();
+
+			model.addAttribute("user", user);
+			model.addAttribute("roles", roles);
+			model.addAttribute("pageTitle", "Edit User (ID:" + id + ")");
+			return "user_form";
+		} catch (UserNotFoundException ex) {
+			redirectAttributes.addFlashAttribute("msg", ex.getMessage());
+			return "redirect:/users";
+		}
 	}
 
 }

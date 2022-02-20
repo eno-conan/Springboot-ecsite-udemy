@@ -1,6 +1,7 @@
 package com.shopme.admin.user;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -39,7 +40,26 @@ public class UserService {
 	}
 
 	public User save(User user) {
-		encodePassword(user);
+		// 新規か更新か処理を分ける
+		boolean isUpdatingUser = (user.getId() != null);
+
+		// idからUser情報取得
+		if (isUpdatingUser) {
+			User existingUser = userRepo.findById(user.getId()).get();
+
+//			更新時、パスワードを入力していない場合は、現在のパスワードで更新（何もしない）
+			if (user.getPassword().isEmpty()) {
+				user.setPassword(existingUser.getPassword());
+			} else {
+				encodePassword(user);
+			}
+			//画像を更新しない場合、現状使用している画像のファイル名を保持してDB保存
+			//->formのhiddenがphotosの値をもたせればokか
+//			user.setPhotos(existingUser.getPhotos());
+
+		} else {
+			encodePassword(user);
+		}
 		User savedInfo = userRepo.save(user);
 		if (savedInfo == null) {
 			System.out.println("not registered any user info");
@@ -53,9 +73,42 @@ public class UserService {
 		user.setPassword(encodedPassword);
 	}
 
-	public boolean isEmailUnique(String email) {
+	public boolean isEmailUnique(Integer id, String email) {
 		User userByEmail = userRepo.getUserByEmail(email);
+
+		// まだ使用されていないアドレス：OK
+		if (userByEmail == null) {
+			return true;
+		}
+
+		// メールアドレスを変更しない場合の対応（DBと入力値の整合性が取れれば）
+		if (userByEmail.getId() == id && userByEmail.getEmail().equals(email)) {
+			return true;
+		}
+
+		boolean isCreatingNew = (id == null);
+
+		if (isCreatingNew) {
+			// 新規ユーザー
+			if (userByEmail != null) {
+				return false;
+			}
+		} else {
+			// 既存User更新：メールアドレスから取得したidとパラメータで取得したＩＤは一致しないとおかしい
+			if (userByEmail.getId() != id) {
+				return false;
+			}
+		}
+
 		return userByEmail == null;
+	}
+
+	public User getUserById(Integer id) throws UserNotFoundException {
+		try {
+			return userRepo.findById(id).get();
+		} catch (NoSuchElementException ex) {
+			throw new UserNotFoundException("Could not find any user with id" + id);
+		}
 	}
 
 }

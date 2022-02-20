@@ -41,10 +41,10 @@
 					<tr th:each="user:${users}">
 						<td>[[${user.id}]]</td>
 						<td>
-							<!-- th:srcの中身 Entityクラス内でメソッドを用意 --> 
-							<span th:if="${user.photos == null}"
-							class="fas fa-portrait fa-2x icon-dark"></span>
-							<img th:if="${user.photos != null}"
+							<!-- th:srcの中身 Entityクラス内でメソッドを用意 --> <span
+							th:if="${user.photos == null}"
+							class="fas fa-portrait fa-2x icon-dark"></span> <img
+							th:if="${user.photos != null}"
 							th:src="@{${user.photosImagePath}}">
 						</td>
 						<td>[[${user.email}]]</td>
@@ -55,7 +55,8 @@
 							class="fas fa-check-circle fa-2x" href=""></a><a
 							th:if="${user.enabled != true }"
 							class="fas fa-check-circle fa-2x icon-dark" href=""></a></td>
-						<td><a class="fas fa-edit fa-2x icon-green" href=""></a>
+						<td><a class="fas fa-edit fa-2x icon-green"
+							th:href="@{'/users/edit/' + ${user.id}}" title="Edit This User"></a>
 							&nbsp;<a class="fas fa-trash fa-2x icon-red" href=""></a></td>
 					</tr>
 				</tbody>
