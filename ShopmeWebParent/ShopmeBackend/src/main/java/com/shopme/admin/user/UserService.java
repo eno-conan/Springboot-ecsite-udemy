@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,8 +31,16 @@ public class UserService {
 		return (List<User>) userRepo.findAll(); // userRepo.findAll() : <Iterable> User -> Cast List User
 	}
 
-	public Page<User> listAllByPage(int pageNum) {
-		Pageable pageable = PageRequest.of(pageNum - 1, USERS_PER_PAGE);
+	public Page<User> listAllByPage(int pageNum, String sortField, String sortDir, String keyword) {
+
+		Sort sort = Sort.by(sortField);
+
+		sort = "asc".equals(sortDir) ? sort.ascending() : sort.descending();
+
+		Pageable pageable = PageRequest.of(pageNum - 1, USERS_PER_PAGE, sort);
+		if (keyword != null) {
+			return userRepo.findAll(keyword, pageable);
+		}
 		return userRepo.findAll(pageable);
 	}
 
@@ -53,8 +62,8 @@ public class UserService {
 			} else {
 				encodePassword(user);
 			}
-			//画像を更新しない場合、現状使用している画像のファイル名を保持してDB保存
-			//->formのhiddenがphotosの値をもたせればokか
+			// 画像を更新しない場合、現状使用している画像のファイル名を保持してDB保存
+			// ->formのhiddenがphotosの値をもたせればokか
 //			user.setPhotos(existingUser.getPhotos());
 
 		} else {

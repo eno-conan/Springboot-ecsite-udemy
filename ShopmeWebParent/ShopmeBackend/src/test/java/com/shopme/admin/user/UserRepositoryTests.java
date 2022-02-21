@@ -18,7 +18,7 @@ import org.springframework.test.annotation.Rollback;
 import com.shopme.common.entity.Role;
 import com.shopme.common.entity.User;
 
-@DataJpaTest(showSql = false)//falseにしておくと、結果が見やすい
+@DataJpaTest(showSql = false) // falseにしておくと、結果が見やすい
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Rollback(false)
 public class UserRepositoryTests {
@@ -106,7 +106,7 @@ public class UserRepositoryTests {
 		int pageNumber = 0;
 		int pageSize = 4;
 
-		//ページングで設定した件数分が取得できているか検証		
+		// ページングで設定した件数分が取得できているか検証
 		Pageable pageable = PageRequest.of(pageNumber, pageSize);
 		Page<User> page = repo.findAll(pageable);
 
@@ -115,6 +115,25 @@ public class UserRepositoryTests {
 		listUsers.forEach(user -> System.out.println(user));
 
 		assertThat(listUsers.size()).isEqualTo(pageSize);
+	}
+
+	@Test
+	public void testSearchUsers() {
+		String keyword = "abc";
+
+		int pageNumber = 0;
+		int pageSize = 4;
+
+		// ページングで設定した件数分が取得できているか検証
+		Pageable pageable = PageRequest.of(pageNumber, pageSize);
+		Page<User> page = repo.findAll(keyword, pageable);
+
+		List<User> listUsers = page.getContent();
+
+		listUsers.forEach(user -> System.out.println(user));
+
+		assertThat(listUsers.size()).isGreaterThan(0);
+
 	}
 
 }

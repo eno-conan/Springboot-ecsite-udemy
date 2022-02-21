@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -30,14 +31,16 @@ public class UserController {
 	@GetMapping("/users")
 	public String listAll(Model model) {
 		final int INIT_PAGE = 1;
-		// 1ページ目を表示するように設定
-		return listAllByPage(INIT_PAGE, model);
+		// 1ページ目を表示するように設定（初期表示時、検索条件ないため、keywordに紐づく引数：null）
+		return listAllByPage(INIT_PAGE, model, "firstName", "asc", null);
 
 	}
 
 	@GetMapping("/users/page/{pageNum}")
-	public String listAllByPage(@PathVariable(name = "pageNum") int pageNum, Model model) {
-		Page<User> page = service.listAllByPage(pageNum);
+	public String listAllByPage(@PathVariable(name = "pageNum") int pageNum, Model model,
+			@Param("sortField") String sortField, @Param("sortDir") String sortDir, @Param("keyword") String keyword) {
+		
+		Page<User> page = service.listAllByPage(pageNum, sortField, sortDir, keyword);
 		List<User> users = page.getContent();
 
 		// 何件目～何件目までを表示
@@ -47,12 +50,19 @@ public class UserController {
 			endCount = page.getTotalElements();
 		}
 
+		// 昇順に並び替えしたら、降順にできるように。その逆も同様
+		String reverseSortDir = sortDir.equals("asc") ? "desc" : "asc";
+
 		model.addAttribute("currentPage", pageNum);
 		model.addAttribute("totalPages", page.getTotalPages());
 		model.addAttribute("startCount", startCount);
 		model.addAttribute("endCount", endCount);
 		model.addAttribute("totalItems", page.getTotalElements());
 		model.addAttribute("users", users);
+		model.addAttribute("sortField", sortField);
+		model.addAttribute("sortDir", sortDir);
+		model.addAttribute("reverseSortDir", reverseSortDir);
+		model.addAttribute("keyword", keyword);
 		return "users";
 	}
 
@@ -77,11 +87,11 @@ public class UserController {
 			user.setPhotos(fileName);
 			User savedUser = service.save(user);
 			String uploadDir = UPLOAD_BASE_DIR + "/" + savedUser.getId();
-			//画像を更新する場合、既存の画像は削除
+			// 画像を更新する場合、既存の画像は削除
 			FileUploadUtil.cleanDir(uploadDir);
 			FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
-		}else {
-			//画像を必須にするのであれば、異なった処理が必要
+		} else {
+			// 画像を必須にするのであれば、異なった処理が必要
 			service.save(user);
 		}
 		redirectAttributes.addFlashAttribute("msg", "The user has been saved successfully");
