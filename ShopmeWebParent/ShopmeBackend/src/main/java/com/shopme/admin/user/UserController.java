@@ -3,6 +3,8 @@ package com.shopme.admin.user;
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
@@ -39,7 +41,7 @@ public class UserController {
 	@GetMapping("/users/page/{pageNum}")
 	public String listAllByPage(@PathVariable(name = "pageNum") int pageNum, Model model,
 			@Param("sortField") String sortField, @Param("sortDir") String sortDir, @Param("keyword") String keyword) {
-		
+
 		Page<User> page = service.listAllByPage(pageNum, sortField, sortDir, keyword);
 		List<User> users = page.getContent();
 
@@ -96,7 +98,15 @@ public class UserController {
 		}
 		redirectAttributes.addFlashAttribute("msg", "The user has been saved successfully");
 
-		return "redirect:/users"; // usersのトップページにリダイレクト（再送信を防ぐ目的もあり）
+		return getRedirectLinkUpdateUserInfo(user);
+	}
+
+	private String getRedirectLinkUpdateUserInfo(User user) {
+		// 保存後、自分の情報だけを表示する方がUX向上！
+		String firstPartOfEmail = user.getEmail().split("@")[0];
+		// keyword : 検索フォームに入力する値（e-mailはユニーク、一人しか表示されないことが確約される）
+		String pathForUpdateUser = "/page/1?sortField=id&sortDir=asc&keyword=" + firstPartOfEmail;
+		return "redirect:/users" + pathForUpdateUser; // usersのトップページにリダイレクト（再送信を防ぐ目的もあり）
 	}
 
 	@GetMapping("/users/edit/{id}")
@@ -113,6 +123,13 @@ public class UserController {
 			redirectAttributes.addFlashAttribute("msg", ex.getMessage());
 			return "redirect:/users";
 		}
+	}
+
+	@GetMapping("/users/export/csv")
+	public void exportToCsv(HttpServletResponse response) throws IOException {
+		List<User> listUsers = service.listAll();
+		UserCsvExporter exporter = new UserCsvExporter();
+		exporter.export(listUsers, response);
 	}
 
 }
