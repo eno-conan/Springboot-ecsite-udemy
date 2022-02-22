@@ -20,7 +20,8 @@
 		<div>
 			<h2>manage users</h2>
 			<a th:href="@{/users/new}">Create New User</a>&nbsp;|&nbsp; <a
-				th:href="@{/users/export/csv}">Export to Csv</a>
+				th:href="@{/users/export/csv}">Export to Csv</a> &nbsp;|&nbsp; <a
+				th:href="@{/users/export/pdf}">Export to PDF</a>
 		</div>
 		<div th:if="${msg != null}" class="alert alert-success text-center">[[${msg}]]</div>
 
