@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="ja" xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="UTF-8">
-<link rel="stylesheet" th:href="@{/css/style.css}">
-<title>header</title>
-</head>
+<html xmlns:th="http://www.thymeleaf.org">
 <body>
-	<div class="header" th:fragment="header">
+	<div th:fragment="menu">
+		<form th:action="@{/logout}" method="post" th:hidden="true"
+			name="logoutForm">
+			<input type="submit" />
+		</form>
 		<div class="navbar navbar-expand=lg bg-dark navbar-dark">
 			<a class="navbar-brand" th:href="@{/}"><img alt=""
 				th:src="@{/images/ShopmeAdminSmall.png}" /> </a>
@@ -26,6 +25,15 @@
 					<li class="nav-item"><a class="nav-link"
 						th:href="@{/products}">Products</a></li>
 					<!-- customers,shipping,orders,sales report,articles,menus,setting -->
+					<li><span class="fas fa-user fa-2x icon-silver"></span></li>
+					<li class="nav-item dropdown">
+						<!--  principal.username : ShopmeUserDetails.getUsername--> <a
+						class="nav-link dropdown-toggle" data-toggle="dropdown"
+						sec:authentication="principal.fullName"></a>
+						<div class="dropdown-menu" style="max-width: 50px;">
+							<a class="dropdown-item " id="logoutLink" th:href="@{/logout}">LogOut</a>
+						</div>
+					</li>
 				</ul>
 			</div>
 		</div>
