@@ -45,7 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 //	以下メールアドレスとパスワードでテストログイン可能
-//	test@gmail.com -> testtest
+//	all@gmail.com:987654321
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests().anyRequest().authenticated().and().formLogin().loginPage("/login")

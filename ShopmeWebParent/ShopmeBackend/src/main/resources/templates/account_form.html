@@ -13,6 +13,9 @@
 			<div class="text-center">
 				<h2>Account Detail</h2>
 			</div>
+
+			<div th:if="${msg != null}" class="alert alert-success text-center">[[${msg}]]</div>
+			
 			<div class="border border-secondary rounded p-3">
 				<div class="form-group row">
 					<label class="col-sm-4 col-form-label">E-mail</label>
