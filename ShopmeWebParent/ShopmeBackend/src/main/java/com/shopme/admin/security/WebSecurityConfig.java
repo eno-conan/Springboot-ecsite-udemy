@@ -26,15 +26,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		return new BCryptPasswordEncoder();
 	}
 
+	// 認証処理を担う
 	public DaoAuthenticationProvider daoAuthenticationProvider() {
 		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+		// ユーザー名（本サイトではメールアドレスで行う）による認証処理（情報検索）
 		authProvider.setUserDetailsService(userDetailsService());
+		// パスワード暗号化
 		authProvider.setPasswordEncoder(passwordEncoder());
 
 		return authProvider;
 
 	}
 
+	// ProviderManager（司令塔）
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.authenticationProvider(daoAuthenticationProvider());
@@ -52,7 +56,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		// この設定を実装しないと、画像ファイルが読み込みできないようになっている:configure(HttpSecurity http)メソッドの実装により
-		// webjars:bootstrapの読み込みで必要→Spring　Securityの影響で全てのフォルダでやらないとエラー
+		// webjars:bootstrapの読み込みで必要→Spring Securityの影響で全てのフォルダでやらないとエラー
 		web.ignoring().antMatchers("/images/**", "/js/**", "/fontawesome/**", "/css/**", "/webjars/**");
 	}
 

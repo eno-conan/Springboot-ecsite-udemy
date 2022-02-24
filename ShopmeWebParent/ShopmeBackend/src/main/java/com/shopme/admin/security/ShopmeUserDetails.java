@@ -21,6 +21,7 @@ public class ShopmeUserDetails implements UserDetails {
 		this.user = user;
 	}
 
+	// ロールによる認可を行う上で関係
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		Set<Role> roles = user.getRoles();

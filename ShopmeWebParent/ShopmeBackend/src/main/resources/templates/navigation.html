@@ -29,7 +29,7 @@
 					<li class="nav-item dropdown">
 						<!--  principal.username : ShopmeUserDetails.getUsername--> <a
 						class="nav-link dropdown-toggle" data-toggle="dropdown"
-						sec:authentication="principal.fullName"></a>
+						th:href="@{/account}" sec:authentication="principal.fullName"></a>
 						<div class="dropdown-menu" style="max-width: 50px;">
 							<a class="dropdown-item " id="logoutLink" th:href="@{/logout}">LogOut</a>
 						</div>

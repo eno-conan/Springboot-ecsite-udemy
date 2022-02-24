@@ -27,10 +27,14 @@ public class UserService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
+	public User getUserByEmail(String email) {
+		return userRepo.getUserByEmail(email);
+	}
+
 	public List<User> listAll() {
 		// userRepo.findAll() : <Iterable> User -> Cast List User
-		//引数追加しているが、Controller側で追加する必要はない
-		return (List<User>) userRepo.findAll(Sort.by("firstName").ascending()); 
+		// 引数追加しているが、Controller側で追加する必要はない
+		return (List<User>) userRepo.findAll(Sort.by("firstName").ascending());
 	}
 
 	public Page<User> listAllByPage(int pageNum, String sortField, String sortDir, String keyword) {

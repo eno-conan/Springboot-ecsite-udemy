@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import com.shopme.admin.user.UserRepository;
 import com.shopme.common.entity.User;
 
+//UserDetailsService： exist loadUserByUsername method only!
 public class ShopmeUserDetailsService implements UserDetailsService {
 
 	@Autowired
