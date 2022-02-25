@@ -37,13 +37,13 @@ public class CategoryService {
 		for (Category category : categoriesInDB) {
 			// in case check "root category", add List all sub categories
 			if (category.getParent() == null) {
-				listCategoriesUsedInForm.add(new Category(category.getName()));
+				listCategoriesUsedInForm.add(Category.copyIdAndName(category));
 
 				Set<Category> children = category.getChildren();
 
 				for (Category subCategory : children) {
 					String name = "--" + subCategory.getName();
-					listCategoriesUsedInForm.add(new Category(name));
+					listCategoriesUsedInForm.add(Category.copyIdAndName(subCategory.getId(), subCategory.getName()));
 					int subDirCnt = 1;
 					listChildren(listCategoriesUsedInForm, subCategory, subDirCnt);
 				}
@@ -63,7 +63,7 @@ public class CategoryService {
 				name += "--";
 			}
 			name += subCategory.getName();
-			listCategoriesUsedInForm.add(new Category(name));
+			listCategoriesUsedInForm.add(Category.copyIdAndName(subCategory.getId(), subCategory.getName()));
 			// recursive
 			listChildren(listCategoriesUsedInForm, subCategory, newSubLevel);
 		}
