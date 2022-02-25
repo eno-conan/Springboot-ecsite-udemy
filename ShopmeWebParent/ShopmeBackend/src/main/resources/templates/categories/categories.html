@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments::page_head('Categories')"></head>
+<body>
+	<div class="container-fluid">
+		<div th:replace="navigation::menu"></div>
+		<div>
+			<h2>Categories</h2>
+			<a th:href="@{/categories/new}">Create New Category</a>&nbsp;
+			<!--|&nbsp; <a
+				th:href="@{/users/export/csv}">Export to Csv</a> &nbsp;|&nbsp; <a
+				th:href="@{/users/export/pdf}">Export to PDF</a> -->
+		</div>
+		<div th:if="${msg != null}" class="alert alert-success text-center">[[${msg}]]</div>
+
+		<div>
+			<form th:action="@{/categories/page/1}" class="form-inline">
+				<input type="hidden" name="sortField" th:value="${sortField}">
+				<input type="hidden" name="sortDir" th:value="${sortDir}">
+				<div class="m-1">
+					Filter:&nbsp; <input type="search" name="keyword"
+						th:value="${keyword}" class="form-control" required />
+				</div>
+				<div class="m-1">
+					<input type="submit" value="search" class="btn btn-primary" />
+				</div>
+				<div class="m-1">
+					<input type="button" value="clear" class="btn btn-secondary"
+						onclick="clearFilter()" />
+				</div>
+			</form>
+		</div>
+
+
+		<div>
+			<table
+				class="table table-bordered table-striped table-hover table-responsive-xl">
+				<thead class="thead-dark">
+					<tr>
+						<th th:replace="fragments::column_link('id','ID')"></th>
+						<th>Category image</th>
+						<th th:replace="fragments::column_link('name','Name')"></th>
+						<th th:replace="fragments::column_link('alias','Alias')"></th>
+						<th>Enabled</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="category:${categories}">
+						<td>[[${category.id}]]</td>
+						<td><span th:if="${category.image == null}"
+							class="fas fa-portrait fa-2x icon-dark"></span> <img
+							th:if="${category.image != null}"></td>
+						<td>[[${category.name}]]</td>
+						<td>[[${category.alias}]]</td>
+						<td><a th:if="${category.enabled == true }"
+							class="fas fa-check-circle fa-2x" href=""></a><a
+							th:if="${category.enabled != true }"
+							class="fas fa-check-circle fa-2x icon-dark" href=""></a></td>
+						<td><a class="fas fa-edit fa-2x icon-green"
+							th:href="@{'/categories/edit/' + ${category.id}}"
+							title="Edit This User"></a> &nbsp;<a
+							class="fas fa-trash fa-2x icon-red" href=""></a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div class="text-center m-2" th:if="${totalItems > 0}">
+			<span> Showing Users [[${startCount}]] to [[${endCount}]] of
+				[[${totalItems}]]</span>
+		</div>
+		<div class="text-center m-2" th:unless="${totalItems > 0}">
+			<span>No Users Found</span>
+		</div>
+
+		<div th:if="${totalPages > 1}">
+			<nav aria-label="Page navigation example">
+				<ul class="pagination justify-content-center">
+					<li
+						th:class="${currentPage > 1 ? 'page-item':'page-item disabled'}"><a
+						th:replace="fragments::page_link(1,'First')"></a></li>
+					<li
+						th:class="${currentPage > 1 ? 'page-item':'page-item disabled'}">
+						<a
+						th:replace="fragments::page_link(${currentPage - 1},'Previous')"></a>
+					</li>
+
+					<li th:class="${currentPage !=i ? 'page-item':'page-item active'}"
+						th:each="i : ${#numbers.sequence(1,totalPages)}"><a
+						th:replace="fragments::page_link(${i},${i})"></a>
+					<li
+						th:class="${currentPage < totalPages ? 'page-item':'page-item disabled'}">
+						<a th:replace="fragments::page_link(${currentPage + 1},'Next')"></a>
+					</li>
+					<li
+						th:class="${currentPage < totalPages ? 'page-item':'page-item disabled'}">
+						<a th:replace="fragments::page_link(${totalPages},'Last')"></a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+
+		<div th:replace="fragments::footer"></div>
+	</div>
+	<script type="text/javascript">
+		function clearFilter() {
+			window.location = "[[@{/categories}]]";
+		}
+	</script>
+</body>
+</html>
