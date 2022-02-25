@@ -7,9 +7,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
 public class FileUploadUtil {
+	private static final Logger LOGGER = LoggerFactory.getLogger(FileUploadUtil.class);
 
 	public static void cleanDir(String dir) {
 		Path dirPath = Paths.get(dir);
@@ -19,12 +22,14 @@ public class FileUploadUtil {
 					try {
 						Files.delete(file);
 					} catch (IOException ex1) {
-						System.out.println("could not delete file:" + file);
+						LOGGER.error("could not delete file:" + file);
+//						System.out.println("could not delete file:" + file);
 					}
 				}
 			});
 		} catch (IOException ex2) {
-			System.out.println("could not list directory" + dirPath);
+			LOGGER.error("could not delete file:" + dirPath);
+//			System.out.println("could not list directory" + dirPath);
 		}
 
 	}

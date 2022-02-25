@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-<head th:replace="fragments :: page_head('Home')"></head>
+<head th:replace="fragments :: page_head('Error - Shopme Admin')"></head>
 <meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
 <body>
 	<div class="container-fluid">
 		<div th:replace="navigation :: menu"></div>
-		<div>
-			<h1>Welcome!!! Admin!!!</h1>
-			Welcome <a th:href="@{/account}"
-				sec:authentication="principal.fullName"></a> &nbsp; <span
-				sec:authentication="principal.authorities"></span>
+		<div class="m-3">
+			<h2>Sorry,you the server has encountered an error while
+				processing your request</h2>
 		</div>
 		<div th:replace="fragments :: footer"></div>
 	</div>
