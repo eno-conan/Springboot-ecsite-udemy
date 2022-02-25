@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.shopme.admin.user.UserController;
+import com.shopme.admin.user.controller.UserController;
 
 @Configuration
 public class MvcConfig implements WebMvcConfigurer {
