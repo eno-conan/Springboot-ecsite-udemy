@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.shopme.common.entity.Category;
+import com.shopme.common.entity.User;
 
 @Service
 public class CategoryService {
@@ -25,11 +26,16 @@ public class CategoryService {
 		return (List<Category>) repo.findAll();
 	}
 
+	public Category save(Category category) {
+		return repo.save(category);
+	}
+
 	public List<Category> listCategoriesUsedInForm() {
 		List<Category> listCategoriesUsedInForm = new ArrayList<>();
 		Iterable<Category> categoriesInDB = repo.findAll();
 
 		for (Category category : categoriesInDB) {
+			// in case check "root category", add List all sub categories
 			if (category.getParent() == null) {
 				listCategoriesUsedInForm.add(new Category(category.getName()));
 
