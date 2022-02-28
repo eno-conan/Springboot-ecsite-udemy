@@ -16,7 +16,7 @@ public interface CategoryRepository extends PagingAndSortingRepository<Category,
 	public List<Category> findRootCategories();
 
 	public Category findByName(String name);
-	public Category findByAliias(String name);
+	public Category findByAlias(String name);
 
 	@Query("select c from Category c where concat(c.id,' ',c.name,' ',c.alias) LIKE %?1%")
 	public Page<Category> findAll(String keyword, Pageable pageable);

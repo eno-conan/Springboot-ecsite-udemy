@@ -1,4 +1,4 @@
-package com.shopme.admin.user;
+package com.shopme.admin.category;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -75,7 +75,7 @@ public class CategoryRepositoryTests {
 	@Test
 	public void testFindByAlias() {
 		String alias = "Computers";
-		Category category = categoryRepo.findByAliias(alias);
+		Category category = categoryRepo.findByAlias(alias);
 
 		assertThat(category).isNotNull();
 		assertThat(category.getAlias()).isEqualTo(alias);

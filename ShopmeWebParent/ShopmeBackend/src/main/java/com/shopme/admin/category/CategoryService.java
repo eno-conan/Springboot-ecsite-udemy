@@ -103,6 +103,23 @@ public class CategoryService {
 
 	}
 
+	public String checkUnique(Integer id, String name, String alias) {
+		boolean isCreatingNew = (id == null || id == 0);
+
+		Category categoryByName = repo.findByName(name);
+		if (isCreatingNew) {
+			if (categoryByName != null) {
+				return "DuplicatedName";
+			} else {
+				Category categoryByAlias = repo.findByAlias(alias);
+				if (categoryByAlias != null) {
+					return "DuplicatedAlias";
+				}
+			}
+		}
+		return "OK";
+	}
+
 	public Page<Category> listAllByPage(int pageNum, String sortField, String sortDir, String keyword) {
 		Sort sort = Sort.by(sortField);
 
