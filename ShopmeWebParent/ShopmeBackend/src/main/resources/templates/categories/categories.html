@@ -48,9 +48,9 @@
 				<tbody>
 					<tr th:each="category:${categories}">
 						<td>[[${category.id}]]</td>
-						<td><span th:if="${category.image == null}"
-							class="fas fa-portrait fa-2x icon-dark"></span> <img
-							th:if="${category.image != null}"></td>
+						<td>
+						<img alt="No-image" th:src="@{${category.imagePath}}" style="max-width: 300px; margin: 0 auto">
+						</td>
 						<td>[[${category.name}]]</td>
 						<td>[[${category.alias}]]</td>
 						<td><a th:if="${category.enabled == true }"

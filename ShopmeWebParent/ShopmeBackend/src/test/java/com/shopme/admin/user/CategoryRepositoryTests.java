@@ -2,6 +2,7 @@ package com.shopme.admin.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -52,6 +53,32 @@ public class CategoryRepositoryTests {
 		}
 
 		assertThat(children.size()).isGreaterThan(0);
+
+	}
+
+	@Test
+	public void testListRootCategories() {
+		List<Category> categories = categoryRepo.findRootCategories();
+		categories.forEach(ctgr -> System.out.println(ctgr.getName()));
+	}
+
+	@Test
+	public void testFindByName() {
+		String name = "Computers";
+		Category category = categoryRepo.findByName(name);
+
+		assertThat(category).isNotNull();
+		assertThat(category.getName()).isEqualTo(name);
+
+	}
+	
+	@Test
+	public void testFindByAlias() {
+		String alias = "Computers";
+		Category category = categoryRepo.findByAliias(alias);
+
+		assertThat(category).isNotNull();
+		assertThat(category.getAlias()).isEqualTo(alias);
 
 	}
 
