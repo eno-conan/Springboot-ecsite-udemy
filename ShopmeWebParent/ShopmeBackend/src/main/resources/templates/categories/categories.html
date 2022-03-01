@@ -39,7 +39,7 @@
 					<tr>
 						<th th:replace="fragments::column_link('id','ID')"></th>
 						<th>Category image</th>
-						<th th:replace="fragments::column_link('name','Name')"></th>
+						<th><a class="text-white" th:href="@{'/categories?sortDir=asc'}">Category Name</a></th>
 						<th th:replace="fragments::column_link('alias','Alias')"></th>
 						<th>Enabled</th>
 						<th></th>
@@ -48,9 +48,8 @@
 				<tbody>
 					<tr th:each="category:${categories}">
 						<td>[[${category.id}]]</td>
-						<td>
-						<img alt="No-image" th:src="@{${category.imagePath}}" style="max-width: 300px; margin: 0 auto">
-						</td>
+						<td><img alt="No-image" th:src="@{${category.imagePath}}"
+							style="max-width: 300px; margin: 0 auto"></td>
 						<td>[[${category.name}]]</td>
 						<td>[[${category.alias}]]</td>
 						<td><a th:if="${category.enabled == true }"

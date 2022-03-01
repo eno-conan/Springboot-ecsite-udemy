@@ -10,9 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Rollback;
 
-import com.shopme.admin.category.CategoryRepository;
 import com.shopme.common.entity.Category;
 
 @DataJpaTest(showSql = false) // falseにしておくと、結果が見やすい
@@ -58,7 +58,7 @@ public class CategoryRepositoryTests {
 
 	@Test
 	public void testListRootCategories() {
-		List<Category> categories = categoryRepo.findRootCategories();
+		List<Category> categories = categoryRepo.findRootCategories(Sort.by("name").ascending());
 		categories.forEach(ctgr -> System.out.println(ctgr.getName()));
 	}
 

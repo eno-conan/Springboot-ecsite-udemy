@@ -28,8 +28,8 @@ public class CategoryController {
 	private CategoryService service;
 
 	@GetMapping("/categories")
-	public String listAll(Model model) {
-		List<Category> categories = service.listAll();
+	public String listAll(@Param("sortDir") String sortDir, Model model) {
+		List<Category> categories = service.listAll(sortDir);
 		model.addAttribute("categories", categories);
 		return "categories/categories";
 //		final int INIT_PAGE = 1;

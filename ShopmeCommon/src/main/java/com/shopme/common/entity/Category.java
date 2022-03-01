@@ -80,7 +80,7 @@ public class Category {
 	public Category(String name) {
 		this.name = name;
 		this.alias = name;
-		this.image = "default.png";
+		this.image = "image-thumbnail.png";
 	}
 
 	public Category(Integer id, String name, String alias) {
@@ -153,7 +153,12 @@ public class Category {
 
 	@Transient
 	public String getImagePath() {
-		return "/category-images/" + this.id + "/" + this.image;
+//		if not set picture to category,view default picture 
+		if ("image-thumbnail.png".equals(this.image)) {
+			return "/images/image-thumbnail.png";
+		} else {
+			return "/category-images/" + this.id + "/" + this.image;
+		}
 	}
 
 }

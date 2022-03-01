@@ -4,16 +4,16 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import com.shopme.common.entity.Category;
-import com.shopme.common.entity.User;
 
 public interface CategoryRepository extends PagingAndSortingRepository<Category, Integer> {
 
 	@Query("select c FROM Category c where c.parent.id is null")
-	public List<Category> findRootCategories();
+	public List<Category> findRootCategories(Sort sort);
 
 	public Category findByName(String name);
 	public Category findByAlias(String name);
