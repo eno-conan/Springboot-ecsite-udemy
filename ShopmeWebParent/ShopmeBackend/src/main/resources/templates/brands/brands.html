@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments::page_head('Categories')"></head>
+<body>
+	<div class="container-fluid">
+		<div th:replace="navigation::menu"></div>
+		<div>
+			<h2>Brands</h2>
+			<a th:href="@{/brands/new}">Create New Brands</a>&nbsp;
+			<!--|&nbsp; <a
+				th:href="@{/users/export/csv}">Export to Csv</a> &nbsp;|&nbsp; <a
+				th:href="@{/users/export/pdf}">Export to PDF</a> -->
+		</div>
+		<div th:if="${msg != null}" class="alert alert-success text-center">[[${msg}]]</div>
+
+		<div>
+			<form th:action="@{/brands/page/1}" class="form-inline">
+				<input type="hidden" name="sortField" th:value="${sortField}">
+				<input type="hidden" name="sortDir" th:value="${sortDir}">
+				<div class="m-1">
+					Filter:&nbsp; <input type="search" name="keyword"
+						th:value="${keyword}" class="form-control" required />
+				</div>
+				<div class="m-1">
+					<input type="submit" value="search" class="btn btn-primary" />
+				</div>
+				<div class="m-1">
+					<input type="button" value="clear" class="btn btn-secondary"
+						onclick="clearFilter()" />
+				</div>
+			</form>
+		</div>
+
+
+		<div>
+			<table
+				class="table table-bordered table-striped table-hover table-responsive-xl">
+				<thead class="thead-dark">
+					<tr>
+						<th>ID</th>
+						<th>Logo</th>
+						<th>Name</th>
+						<th>Categories</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="brand : ${brands}">
+						<td>[[${brand.id}]]</td>
+						<td>[[${brand.logo}]]</td>
+						<!-- <img alt="No-image" th:src="@{${category.imagePath}}"
+							style="max-width: 300px; margin: 0 auto">-->
+						<td>[[${brand.name}]]</td>
+						<td><th:block th:each="cat : ${brand.categories}">
+								<span class="badge badge-secondary">[[${cat.name}]]</span>
+							</th:block></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<!-- <div class="text-center m-2" th:if="${totalItems > 0}">
+			<span> Showing Users [[${startCount}]] to [[${endCount}]] of
+				[[${totalItems}]]</span>
+		</div>
+		<div class="text-center m-2" th:unless="${totalItems > 0}">
+			<span>No Users Found</span>
+		</div>
+
+		<div th:if="${totalPages > 1}">
+			<nav aria-label="Page navigation example">
+				<ul class="pagination justify-content-center">
+					<li
+						th:class="${currentPage > 1 ? 'page-item':'page-item disabled'}"><a
+						th:replace="fragments::page_link(1,'First')"></a></li>
+					<li
+						th:class="${currentPage > 1 ? 'page-item':'page-item disabled'}">
+						<a
+						th:replace="fragments::page_link(${currentPage - 1},'Previous')"></a>
+					</li>
+
+					<li th:class="${currentPage !=i ? 'page-item':'page-item active'}"
+						th:each="i : ${#numbers.sequence(1,totalPages)}"><a
+						th:replace="fragments::page_link(${i},${i})"></a>
+					<li
+						th:class="${currentPage < totalPages ? 'page-item':'page-item disabled'}">
+						<a th:replace="fragments::page_link(${currentPage + 1},'Next')"></a>
+					</li>
+					<li
+						th:class="${currentPage < totalPages ? 'page-item':'page-item disabled'}">
+						<a th:replace="fragments::page_link(${totalPages},'Last')"></a>
+					</li>
+				</ul>
+			</nav>
+		</div> -->
+
+		<div th:replace="fragments::footer"></div>
+	</div>
+	<script type="text/javascript">
+		function clearFilter() {
+			window.location = "[[@{/brands}]]";
+		}
+	</script>
+</body>
+</html>
