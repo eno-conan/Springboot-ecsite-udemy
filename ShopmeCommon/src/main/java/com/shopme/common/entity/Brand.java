@@ -12,11 +12,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "brands")
 public class Brand {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
@@ -26,22 +27,18 @@ public class Brand {
 
 	@Column(length = 128, nullable = false)
 	private String logo;
-	
+
 	@ManyToMany
-	@JoinTable(
-			name="brand_categories",
-			joinColumns = @JoinColumn(name="brand_id"),
-			inverseJoinColumns = @JoinColumn(name="category_id")
-			)
+	@JoinTable(name = "brand_categories", joinColumns = @JoinColumn(name = "brand_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
 	private Set<Category> categories = new HashSet<>();
-	
+
 	public Brand() {
-		
+
 	}
-	
+
 	public Brand(String name) {
 		this.name = name;
-		this.logo = "default.png";
+		this.logo = "image-thumbnail.png";
 	}
 
 	public Integer getId() {
@@ -75,5 +72,19 @@ public class Brand {
 	public void setCategories(Set<Category> categories) {
 		this.categories = categories;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "Brand [id=" + id + ", name=" + name + ", logo=" + logo + ", categories=" + categories + "]";
+	}
+
+	@Transient
+	public String getLogoPath() {
+		if ("image-thumbnail.png".equals(this.logo) || id == null) {
+			return "/images/image-thumbnail.png";
+		} else {
+			return "/brand-logos/" + this.id + "/" + this.logo;
+		}
+	}
+
 }

@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import com.shopme.common.entity.Brand;
-
+import com.shopme.common.entity.Category;
 
 @Service
 public class BrandService {
@@ -27,8 +27,24 @@ public class BrandService {
 	private BrandRepository repo;
 
 	public List<Brand> listAll() {
-		List<Brand> brands =  (List<Brand>) repo.findAll();
+		List<Brand> brands = (List<Brand>) repo.findAll();
 		return brands;
+	}
+
+	public String checkUnique(Integer id, String name) {
+		boolean isCreatingNew = (id == null || id == 0);
+
+		Brand brandByName = repo.findByName(name);
+		if (isCreatingNew) {
+			if (brandByName != null) {
+				return "Duplicated";
+			}
+		}
+		return "OK";
+	}
+	
+	public Brand save(Brand brand) {
+		return repo.save(brand);
 	}
 
 //	private List<Category> listHierarchicalCategories(List<Category> rootCategories) {

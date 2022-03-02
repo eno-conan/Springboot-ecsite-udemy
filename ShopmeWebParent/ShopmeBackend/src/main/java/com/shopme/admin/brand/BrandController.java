@@ -17,22 +17,51 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.shopme.admin.FileUploadUtil;
+import com.shopme.admin.category.CategoryService;
 import com.shopme.common.entity.Brand;
 import com.shopme.common.entity.Category;
 
 @Controller
 public class BrandController {
 
-	public static final String UPLOAD_BASE_DIR = "../category-images";
+	public static final String UPLOAD_BASE_DIR = "../brand-logos";
 
 	@Autowired
-	private BrandService service;
+	private BrandService brandService;
+
+	@Autowired
+	private CategoryService categoryService;
 
 	@GetMapping("/brands")
 	public String listAll(Model model) {
-		List<Brand> brands = service.listAll();
+		List<Brand> brands = brandService.listAll();
 		model.addAttribute("brands", brands);
 		return "brands/brands";
+	}
+
+	@GetMapping("/brands/new")
+	public String newCategory(Model model) {
+		List<Category> listCategories = categoryService.listCategoriesUsedInForm();
+		model.addAttribute("brand", new Brand());
+		model.addAttribute("listCategories", listCategories);
+		model.addAttribute("pageTitle", "Create New Brand");
+		return "brands/brand_form";
+
+	}
+
+	@PostMapping("/brands/save")
+	public String saveCategory(Brand brand, @RequestParam("fileImage") MultipartFile multipartFile,
+			RedirectAttributes redirectAttributes) throws IOException {
+		String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());// \と/の違いを吸収するっぽい
+		brand.setLogo(fileName);
+		Brand savedBrand = brandService.save(brand);
+		String uploadDir = UPLOAD_BASE_DIR + "/" + savedBrand.getId();
+		// 画像を更新する場合、既存の画像は削除
+		FileUploadUtil.cleanDir(uploadDir);
+		FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+		redirectAttributes.addFlashAttribute("msg", "The Brand has been saved successfully");
+		return "redirect:/brands";
+
 	}
 
 //	@GetMapping("/categories/page/{pageNum}")
@@ -65,30 +94,5 @@ public class BrandController {
 //		return "categories/categories";
 //	}
 //
-//	@GetMapping("/categories/new")
-//	public String newCategory(Model model) {
-//		List<Category> listCategories = service.listCategoriesUsedInForm();
-//		model.addAttribute("category", new Category());
-//		model.addAttribute("listCategories", listCategories);
-//		model.addAttribute("pageTitle", "Create New Category");
-//		return "categories/category_form";
-//
-//	}
-//
-//	@PostMapping("/categories/save")
-//	public String saveCategory(Category category, @RequestParam("fileImage") MultipartFile multipartFile,
-//			RedirectAttributes redirectAttributes) throws IOException {
-//		String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());// \と/の違いを吸収するっぽい
-//		System.out.println(fileName);
-//		category.setImage(fileName);
-//		Category savedCategory = service.save(category);
-//		String uploadDir = UPLOAD_BASE_DIR + "/" + savedCategory.getId();
-//		// 画像を更新する場合、既存の画像は削除
-//		FileUploadUtil.cleanDir(uploadDir);
-//		FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
-//		redirectAttributes.addFlashAttribute("msg", "The category has been saved successfully");
-//		return "redirect:/categories";
-//
-//	}
 
 }
