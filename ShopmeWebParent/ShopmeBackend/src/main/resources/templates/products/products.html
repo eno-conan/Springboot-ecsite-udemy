@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments::page_head('User List')"></head>
+<head th:replace="fragments::page_head('Products')"></head>
 <body>
 	<div class="container-fluid">
 		<div th:replace="navigation::menu"></div>
 		<div>
-			<h2>manage users</h2>
-			<a th:href="@{/users/new}">Create New User</a>&nbsp;|&nbsp; <a
+			<h2>Brands</h2>
+			<a th:href="@{/products/new}">Create New Products</a>&nbsp;
+			<!--|&nbsp; <a
 				th:href="@{/users/export/csv}">Export to Csv</a> &nbsp;|&nbsp; <a
-				th:href="@{/users/export/pdf}">Export to PDF</a>
+				th:href="@{/users/export/pdf}">Export to PDF</a> -->
 		</div>
 		<div th:if="${msg != null}" class="alert alert-success text-center">[[${msg}]]</div>
 
 		<div>
-			<form th:action="@{/users/page/1}" class="form-inline">
+			<form th:action="@{/products/page/1}" class="form-inline">
 				<input type="hidden" name="sortField" th:value="${sortField}">
 				<input type="hidden" name="sortDir" th:value="${sortDir}">
 				<div class="m-1">
@@ -36,43 +37,42 @@
 				class="table table-bordered table-striped table-hover table-responsive-xl">
 				<thead class="thead-dark">
 					<tr>
-						<th th:replace="fragments::column_link('id','User ID')"></th>
-						<th>Photos</th>
-						<th th:replace="fragments::column_link('email','E-mail')"></th>
-						<th th:replace="fragments::column_link('FirstName','First Name')"></th>
-						<th th:replace="fragments::column_link('LastName','Last Name')"></th>
-						<th>Roles</th>
+						<th>ID</th>
+						<th>Main Image</th>
+						<th>Product Name</th>
+						<th>Brand</th>
+						<th>Categories</th>
 						<th>Enabled</th>
 						<th></th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr th:each="user:${users}">
-						<td>[[${user.id}]]</td>
+					<tr th:each="product : ${products}">
+						<td>[[${product.id}]]</td>
 						<td>
-							<span
-							th:if="${user.photos == null}"
-							class="fas fa-portrait fa-2x icon-dark"></span> <img
-							th:if="${user.photos != null}"
-							th:src="@{${user.photosImagePath}}">
+							<!-- <img alt="No-image" th:src="@{${products.logoPath}}"
+							style="max-width: 300px; margin: 0 auto"> -->
 						</td>
-						<td>[[${user.email}]]</td>
-						<td>[[${user.firstName}]]</td>
-						<td>[[${user.LastName}]]</td>
-						<td>[[${user.roles}]]</td>
-						<td><a th:if="${user.enabled == true }"
+						<td>[[${product.name}]]</td>
+						<td>[[${product.brand.name}]]</td>
+						<td>[[${product.category.name}]]</td>
+						<td><a th:if="${product.enabled == true }"
 							class="fas fa-check-circle fa-2x" href=""></a><a
-							th:if="${user.enabled != true }"
+							th:if="${product.enabled != true }"
 							class="fas fa-check-circle fa-2x icon-dark" href=""></a></td>
-						<td><a class="fas fa-edit fa-2x icon-green"
-							th:href="@{'/users/edit/' + ${user.id}}" title="Edit This User"></a>
-							&nbsp;<a class="fas fa-trash fa-2x icon-red" th:href="@{'/users/delete/' + ${user.id}}"></a></td>
+						<td><a class="fas fa-file-alt fa-2x icon-green"
+							th:href="@{'/products/detail/' + ${product.id}}"
+							title="View Details of this product"></a> &nbsp; <a
+							th:replace="fragments::edit('products','/products/edit/' + ${product.id})"></a>&nbsp;
+							<a
+							th:replace="fragments::delete('products',${product.id},'/products/edit/' + ${product.id})"></a>
+						</td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
 
-		<div class="text-center m-2" th:if="${totalItems > 0}">
+		<!-- <div class="text-center m-2" th:if="${totalItems > 0}">
 			<span> Showing Users [[${startCount}]] to [[${endCount}]] of
 				[[${totalItems}]]</span>
 		</div>
@@ -105,13 +105,13 @@
 					</li>
 				</ul>
 			</nav>
-		</div>
+		</div> -->
 
 		<div th:replace="fragments::footer"></div>
 	</div>
 	<script type="text/javascript">
 		function clearFilter() {
-			window.location = "[[@{/users}]]";
+			window.location = "[[@{/products}]]";
 		}
 	</script>
 </body>

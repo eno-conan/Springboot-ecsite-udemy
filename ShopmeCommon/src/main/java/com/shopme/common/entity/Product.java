@@ -59,16 +59,18 @@ public class Product {
 	private float weight;
 
 	@ManyToOne
-	@JoinColumn(name = "category_id")
+	@JoinColumn(name="category_id")
 	private Category category;
 
 	@ManyToOne
-	@JoinColumn(name = "brand_id")
+	@JoinColumn(name="brand_id")
 	private Brand brand;
 
 	@Override
 	public String toString() {
 		return "Product [id=" + id + ", name=" + name + "]";
 	}
+	
+	
 
 }

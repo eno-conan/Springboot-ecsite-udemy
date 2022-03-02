@@ -7,13 +7,14 @@
 <meta name="viewport"
 	content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
 <title>[[${title}]]</title>
-<link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
+<link rel="stylesheet"
+	th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
 <link rel="stylesheet" th:href="@{/fontawesome/all.css}">
 <link rel="stylesheet" th:href="@{/css/style.css}">
 <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
 <script type="text/javascript"
 	th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
-	<script type="text/javascript" th:src="@{/js/common.js}"></script>
+<script type="text/javascript" th:src="@{/js/common.js}"></script>
 </head>
 
 <body>
@@ -34,6 +35,15 @@
 	<a th:fragment="page_link(pageNum,label)" class="page-link"
 		th:href="@{'/users/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + 
 		${keyword != null?'&keyword=' + keyword : ''}}">[[${label}]]</a>
+
+	<!-- edit part -->
+	<a th:fragment="edit(module,path)" class="fas fa-edit fa-2x icon-green"
+		th:href="@{${path}}" th:title="'Edit This ' + ${module}"></a>
+
+	<!-- delete part -->
+	<a th:fragment="delete(module,id,path)"
+		class="fas fa-trash fa-2x icon-red" th:href="@{${path}}"
+		th:entityId="${id}" th:title="'Delete This ' + ${module}"></a>
 
 	<!-- フッター -->
 	<div th:fragment="footer">
