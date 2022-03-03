@@ -3,6 +3,7 @@ package com.shopme.admin.brand;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -42,9 +43,17 @@ public class BrandService {
 		}
 		return "OK";
 	}
-	
+
 	public Brand save(Brand brand) {
 		return repo.save(brand);
+	}
+
+	public Brand get(Integer brandId) throws BrandNotFoundException {
+		try {
+			return repo.findById(brandId).get();
+		} catch (NoSuchElementException ex) {
+			throw new BrandNotFoundException("could not find any brand with id " + brandId);
+		}
 	}
 
 //	private List<Category> listHierarchicalCategories(List<Category> rootCategories) {

@@ -62,6 +62,18 @@ public class BrandRepositoryTests {
 		assertThat(brands).isNotEmpty();
 
 	}
+	
+//	@Test
+//	public void findAllBrandsOrderByNameAsc() {
+//		List<Brand> brands = (List<Brand>) repo.findAll();
+//		brands.forEach(brand -> {
+//			System.out.println(brand.getId() + " / " + brand.getName());
+//			brand.getCategories().forEach(category -> System.out.println(category.getName()));
+//		});
+//
+//		assertThat(brands).isNotEmpty();
+//
+//	}
 
 	@Test
 	public void findBrandById() {

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: page_head('Category Form')">
+<meta charset="ISO-8859-1">
+<body>
+	<div class="container-fluid">
+		<div th:replace="navigation::menu"></div>
+		<div>
+			<h2>manage Product | [[${pageTitle}]]</h2>
+		</div>
+
+		<form th:action="@{/products/save}" th:object="${product}"
+			method="post" enctype="multipart/form-data"
+			onsubmit="return checkUnique(this)"
+			style="max-width: 700px; margin: 0 auto">
+			<input type="hidden" th:field="*{id}">
+
+			<ul class="nav nav-tabs" id="myTab" role="tab">
+				<li class="nav-item active"><a class="nav-link active"
+					data-toggle="tab" href="#overview" role="tab">OverView</a></li>
+				<li class="nav-item active"><a class="nav-link"
+					data-toggle="tab" href="#description" role="tab">Description</a></li>
+				<li class="nav-item"><a class="nav-link" data-toggle="tab"
+					href="#images" role="tab">Images</a></li>
+				<li class="nav-item"><a class="nav-link" data-toggle="tab"
+					href="#details" role="tab">Details</a></li>
+			</ul>
+
+			<div class="tab-content">
+				<div class="tab-pane active" id="overview" role="tabpanel">
+					<div th:replace="products/product_overview::content"></div>
+				</div>
+				<div class="tab-pane" id="description" role="tabpanel">Description</div>
+				<div class="tab-pane" id="images" role="tabpanel">Images</div>
+				<div class="tab-pane" id="details" role="tabpanel">Details</div>
+			</div>
+			<div class="text-center">
+				<input type="submit" value="send" class="btn btn-primary m-3">
+				<input type="button" value="cancel" class="btn btn-secondary"
+					id="buttonCancel">
+			</div>
+		</form>
+
+		<div th:replace="fragments::footer"></div>
+	</div>
+	<script type="text/javascript">
+		moduleURL = "[[@{/products}]]"
+		brandModuleURL = "[[@{/brands}]]"
+
+		dropdownBrands = $("#brand");
+		dropdownCategories = $("#category");
+
+		$(document).ready(function() {
+			dropdownBrands.change(function() {
+				dropdownCategories.empty();
+				getCategories();
+			});
+		});
+
+		function getCategories() {
+			brandId = dropdownBrands.val();
+			url = brandModuleURL + "/" + brandId + "/categories";
+
+			$.get(url, function(responseJson) {
+				$.each(responseJson, function(index, category) {
+					/* index:start zero */
+					$("<option>").val(category.id).text(category.name)
+							.appendTo(dropdownCategories);
+				})
+			})
+		}
+	</script>
+	<script th:src="@{/js/common_form.js}"></script>
+</body>
+</html>

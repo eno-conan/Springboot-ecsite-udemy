@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.shopme.admin.FileUploadUtil;
+import com.shopme.admin.brand.BrandService;
 import com.shopme.admin.category.CategoryService;
 import com.shopme.common.entity.Brand;
 import com.shopme.common.entity.Category;
@@ -33,6 +34,9 @@ public class ProductController {
 	@Autowired
 	private CategoryService categoryService;
 
+	@Autowired
+	private BrandService brandService;
+
 	@GetMapping("/products")
 	public String listAll(Model model) {
 		List<Product> products = productService.listAll();
@@ -48,19 +52,28 @@ public class ProductController {
 	}
 //	memo:id,main-image,product name,brand,category,enabled,excel-edit-delete
 
-//	@GetMapping("/products/new")
-//	public String newCategory(Model model) {
-//		List<Category> listCategories = categoryService.listCategoriesUsedInForm();
-//		model.addAttribute("brand", new Brand());
-//		model.addAttribute("listCategories", listCategories);
-//		model.addAttribute("pageTitle", "Create New Brand");
-//		return "brands/brand_form";
+	@GetMapping("/products/new")
+	public String newCategory(Model model) {
+		List<Brand> brands = brandService.listAll();
+
+		Product product = new Product();
+		product.setEnabled(true);
+		product.setInStock(true);
+		model.addAttribute("brands", brands);
+		model.addAttribute("product", product);
+		model.addAttribute("pageTitle", "Create New Products");
+		return "products/product_form";
+
+	}
+
 //
-//	}
-//
-//	@PostMapping("/brands/save")
-//	public String saveCategory(Brand brand, @RequestParam("fileImage") MultipartFile multipartFile,
-//			RedirectAttributes redirectAttributes) throws IOException {
+	@PostMapping("/products/save")
+	public String saveCategory(Product product) throws IOException {
+		System.out.println(product.getName());
+		System.out.println(product.getBrand().getName());
+		System.out.println(product.getCategory().getName());
+//		@RequestParam("fileImage") MultipartFile multipartFile,
+//		RedirectAttributes redirectAttributes
 //		String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());// \と/の違いを吸収するっぽい
 //		brand.setLogo(fileName);
 //		Brand savedBrand = productService.save(brand);
@@ -69,9 +82,9 @@ public class ProductController {
 //		FileUploadUtil.cleanDir(uploadDir);
 //		FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
 //		redirectAttributes.addFlashAttribute("msg", "The Brand has been saved successfully");
-//		return "redirect:/brands";
-//
-//	}
+		return "redirect:/products";
+
+	}
 
 //	@GetMapping("/categories/page/{pageNum}")
 //	public String listAllByPage(@PathVariable(name = "pageNum") int pageNum, Model model,
