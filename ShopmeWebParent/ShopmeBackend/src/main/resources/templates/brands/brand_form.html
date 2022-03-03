@@ -67,6 +67,7 @@
 	</div>
 	<script type="text/javascript">
 		moduleURL = "[[@{/brands}]]"
+		MAX_FILE_SIZE = 102400; //100KB
 
 		$(document).ready(function() {
 			dropdownCategories = $("#categories");
@@ -105,17 +106,22 @@
 				_csrf : csrfValue
 			};
 
-			$.post(url, params, function(response) {
-				if (response == "OK") {
-					form.submit();
-				} else if (response == "Duplicated") {
-					showWarningModal("CategoryName is Duplicated! Input value is " + brandName);
-				} else {
-					showErrorModal("Unknown Error Happened");
-				}
-			}).fail(function() {
-				showErrorModal("Error", "Could not connect server");
-			});
+			$
+					.post(
+							url,
+							params,
+							function(response) {
+								if (response == "OK") {
+									form.submit();
+								} else if (response == "Duplicated") {
+									showWarningModal("CategoryName is Duplicated! Input value is "
+											+ brandName);
+								} else {
+									showErrorModal("Unknown Error Happened");
+								}
+							}).fail(function() {
+						showErrorModal("Error", "Could not connect server");
+					});
 			return false;
 
 		}

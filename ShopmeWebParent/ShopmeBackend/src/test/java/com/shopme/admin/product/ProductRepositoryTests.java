@@ -65,16 +65,30 @@ public class ProductRepositoryTests {
 		assertThat(testProduct.getId()).isEqualTo(1);
 		assertThat(testProduct.getName()).isEqualTo("Test Product");
 	}
-	
+
 	@Test
 	public void testUpdateProduct() {
 		Product testUpdateProduct = repo.findById(2).get();
 		testUpdateProduct.setName("Test Product2 Updated");
-		
+
 		Product savedProduct = repo.save(testUpdateProduct);
 
 		assertThat(savedProduct.getId()).isEqualTo(2);
 		assertThat(savedProduct.getName()).isEqualTo("Test Product2 Updated");
+	}
+
+	@Test
+	public void testSaveProductWithImages() {
+		Integer productId = 1;
+		Product product = repo.findById(productId).get();
+
+		product.setMainImage("mainImage.jpg");
+		product.addExtraImage("extra1.jpg");
+		product.addExtraImage("extra2.jpg");
+		product.addExtraImage("extra3.jpg");
+
+		Product savedProduct = repo.save(product);
+		assertThat(savedProduct.getImages().size()).isEqualTo(3);
 	}
 
 }

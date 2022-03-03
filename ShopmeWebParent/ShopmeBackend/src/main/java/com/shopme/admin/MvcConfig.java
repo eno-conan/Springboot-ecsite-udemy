@@ -2,6 +2,8 @@ package com.shopme.admin;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -15,26 +17,32 @@ public class MvcConfig implements WebMvcConfigurer {
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registory) {
 
-		String dirName = UserController.UPLOAD_BASE_DIR;
-
-		Path userPhotosdir = Paths.get(dirName);
-
-		String userPhotosPath = userPhotosdir.toFile().getAbsolutePath();
-//		System.out.println(userPhotosPath);
-		registory.addResourceHandler("/" + dirName + "/**").addResourceLocations("file:/" + userPhotosPath + "/");
-
-		//each segment pictures
+		// each segment pictures
+		String userImageDirName = "user-photos";
 		String categoriesImageDirName = "../category-images";
 		String brandsImageDirName = "../brand-logos";
+		String productsImageDirName = "../product-images";
+		List<String> dirNames = composeImagesDirNameList(userImageDirName, categoriesImageDirName, brandsImageDirName,
+				productsImageDirName);
+		for (String dirname : dirNames) {
+			addResouceFromDirName(dirname, registory);
+		}
 
-		Path categoriesImageDir = Paths.get(categoriesImageDirName);
-		Path brandsImageDir = Paths.get(brandsImageDirName);
+	}
 
-		String categoriesImagesPath = categoriesImageDir.toFile().getAbsolutePath();
-		String brandsImagesPath = brandsImageDir.toFile().getAbsolutePath();
-//		System.out.println(userPhotosPath);
-		registory.addResourceHandler("/category-images/**").addResourceLocations("file:/" + categoriesImagesPath + "/");
-		registory.addResourceHandler("/brand-logos/**").addResourceLocations("file:/" + brandsImagesPath + "/");
+	private List<String> composeImagesDirNameList(String... dirNames) {
+		List<String> dirNamesList = new ArrayList<>();
+		for (String dirName : dirNames) {
+			dirNamesList.add(dirName);
+		}
+		return dirNamesList;
+	}
+
+	private void addResouceFromDirName(String dirName, ResourceHandlerRegistry registory) {
+		Path imageDir = Paths.get(dirName);
+		String imagesPath = imageDir.toFile().getAbsolutePath();
+		String logicalPath = dirName.replace("..", "") + "/**";
+		registory.addResourceHandler(logicalPath).addResourceLocations("file:/" + imagesPath + "/");
 
 	}
 

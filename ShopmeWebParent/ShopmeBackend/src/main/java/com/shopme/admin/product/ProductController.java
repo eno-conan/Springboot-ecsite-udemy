@@ -26,7 +26,7 @@ import com.shopme.common.entity.Product;
 @Controller
 public class ProductController {
 
-	public static final String UPLOAD_BASE_DIR = "../brand-logos";
+	public static final String UPLOAD_BASE_DIR = "../product-images";
 
 	@Autowired
 	private ProductService productService;
@@ -68,13 +68,21 @@ public class ProductController {
 
 //
 	@PostMapping("/products/save")
-	public String saveCategory(Product product, RedirectAttributes redirectAttributes) throws IOException {
-		System.out.println(product.getName());
-		System.out.println(product.getBrand().getName());
-		System.out.println(product.getCategory().getName());
+	public String saveCategory(Product product, RedirectAttributes redirectAttributes,
+			@RequestParam("fileImage") MultipartFile multipartFile) throws IOException {
 
+		if (!multipartFile.isEmpty()) {
+			String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());// \と/の違いを吸収するっぽい
+			product.setMainImage(fileName);
+			Product savedproduct = productService.save(product);
+			String uploadDir = UPLOAD_BASE_DIR + "/" + savedproduct.getId();
+
+			FileUploadUtil.cleanDir(uploadDir);
+			FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+		} else {
+			productService.save(product);
+		}
 		productService.save(product);
-
 		redirectAttributes.addFlashAttribute("msg", "The Product has been saved successfully");
 		return "redirect:/products";
 

@@ -90,6 +90,7 @@
 	<script type="text/javascript">
 		/* moduleURL read at common_form.js */
 		moduleURL = "[[@{/}]]"
+		MAX_FILE_SIZE = 102400; //100KB
 
 		function checkEmailUnique(form) {
 			url = "[[@{/user/check_email}]]";
@@ -116,7 +117,6 @@
 			});
 			return false;
 		}
-
 	</script>
 	<script th:src="@{/js/common_form.js}"></script>
 </body>
