@@ -50,9 +50,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests().antMatchers("/users/**").hasAuthority("Admin")
 				.antMatchers("/categories/**", "/brands/**").hasAnyAuthority("Admin", "Editor")
-				.antMatchers("/products/**").hasAnyAuthority("Admin", "SalesPerson", "Editor", "Shipper")
-				.anyRequest().authenticated().and().formLogin().loginPage("/login").usernameParameter("email")
-				.permitAll().and().logout().permitAll().and().rememberMe().key("Abcdefghijkl_123456789")
+				.antMatchers("/products/**").hasAnyAuthority("Admin", "SalesPerson", "Editor", "Shipper").anyRequest()
+				.authenticated().and().formLogin().loginPage("/login").usernameParameter("email").permitAll().and()
+				.logout().permitAll().and().rememberMe().key("Abcdefghijkl_123456789")
 				.tokenValiditySeconds(60 * 60 * 24 * 7);
 	}
 
@@ -60,7 +60,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public void configure(WebSecurity web) throws Exception {
 		// この設定を実装しないと、画像ファイルが読み込みできないようになっている:configure(HttpSecurity http)メソッドの実装により
 		// webjars:bootstrapの読み込みで必要→Spring Securityの影響で全てのフォルダでやらないとエラー
-		web.ignoring().antMatchers("/images/**", "/js/**", "/fontawesome/**", "/css/**", "/webjars/**");
+		web.ignoring().antMatchers("/images/**", "/js/**", "/fontawesome/**", "/css/**", "/webjars/**", "/richtext/**");
 	}
 
 }

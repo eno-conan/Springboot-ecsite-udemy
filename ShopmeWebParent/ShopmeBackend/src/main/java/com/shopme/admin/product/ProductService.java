@@ -2,6 +2,7 @@ package com.shopme.admin.product;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
@@ -15,8 +16,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import com.shopme.common.entity.Brand;
-import com.shopme.common.entity.Category;
 import com.shopme.common.entity.Product;
 
 @Service
@@ -33,21 +32,34 @@ public class ProductService {
 	}
 
 	public Product save(Product product) {
+		if (product.getId() == null) {
+			product.setCreatedTime(new Date());
+		}
+
+		if (product.getAlias() == null | product.getAlias().isEmpty()) {
+			String defaultAlias = product.getName().replaceAll(" ", "-");
+			product.setAlias(defaultAlias);
+		} else {
+			product.setAlias(product.getAlias().replaceAll(" ", "-"));
+		}
+
+		product.setUpdatedTime(new Date());
+
 		return repo.save(product);
 	}
-//	public String checkUnique(Integer id, String name) {
-//		boolean isCreatingNew = (id == null || id == 0);
-//
-//		Brand brandByName = repo.findByName(name);
-//		if (isCreatingNew) {
-//			if (brandByName != null) {
-//				return "Duplicated";
-//			}
-//		}
-//		return "OK";
-//	}
-	
 
+	public String checkUnique(Integer id, String name) {
+		boolean isCreatingNew = (id == null || id == 0);
+
+		Product productByName = repo.findByName(name);
+		if (isCreatingNew) {
+			if (productByName != null) {
+				return "Duplicated";
+			}
+		}
+		return "OK";
+	}
+}
 //	private List<Category> listHierarchicalCategories(List<Category> rootCategories) {
 //		List<Category> hierarchicalCategories = new ArrayList<>();
 //		for (Category category : rootCategories) {
@@ -165,4 +177,3 @@ public class ProductService {
 //		sortedChildren.addAll(children);
 //		return sortedChildren;
 //	}
-}

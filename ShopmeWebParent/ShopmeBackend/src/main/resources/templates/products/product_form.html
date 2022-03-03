@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments :: page_head('Category Form')">
+<head>
+<head th:replace="fragments :: page_head(${pageTitle},'none')" /></head>
+<link rel="stylesheet" th:href="@{/richtext/richtext.min.css}">
+<script th:src=@{/richtext/jquery.richtext.min.js}></script>
+
 <meta charset="ISO-8859-1">
 <body>
 	<div class="container-fluid">
@@ -16,29 +20,39 @@
 			<input type="hidden" th:field="*{id}">
 
 			<ul class="nav nav-tabs" id="myTab" role="tab">
-				<li class="nav-item active"><a class="nav-link active"
+				<li class="nav-item"><a class="nav-link active"
 					data-toggle="tab" href="#overview" role="tab">OverView</a></li>
-				<li class="nav-item active"><a class="nav-link"
-					data-toggle="tab" href="#description" role="tab">Description</a></li>
+				<li class="nav-item"><a class="nav-link" data-toggle="tab"
+					href="#description" role="tab">Description</a></li>
 				<li class="nav-item"><a class="nav-link" data-toggle="tab"
 					href="#images" role="tab">Images</a></li>
 				<li class="nav-item"><a class="nav-link" data-toggle="tab"
 					href="#details" role="tab">Details</a></li>
+				<li class="nav-item"><a class="nav-link" data-toggle="tab"
+					href="#shipping" role="tab">Shipping</a></li>
 			</ul>
 
 			<div class="tab-content">
-				<div class="tab-pane active" id="overview" role="tabpanel">
+				<div class="tab-pane active p-3" id="overview" role="tabpanel">
 					<div th:replace="products/product_overview::content"></div>
 				</div>
-				<div class="tab-pane" id="description" role="tabpanel">Description</div>
+				<div class="tab-pane" id="description" role="tabpanel">
+					<div th:replace="products/product_description::content"></div>
+				</div>
 				<div class="tab-pane" id="images" role="tabpanel">Images</div>
 				<div class="tab-pane" id="details" role="tabpanel">Details</div>
+				<div class="tab-pane p-3" id="shipping" role="tabpanel">
+					<div th:replace="products/product_shipping::content"></div>
+				</div>
 			</div>
 			<div class="text-center">
-				<input type="submit" value="send" class="btn btn-primary m-3">
+				<input type="submit" value="save" class="btn btn-primary m-3">
 				<input type="button" value="cancel" class="btn btn-secondary"
 					id="buttonCancel">
 			</div>
+
+			<div th:replace="modal_fragments::modal_dialog"></div>
+
 		</form>
 
 		<div th:replace="fragments::footer"></div>
@@ -51,6 +65,10 @@
 		dropdownCategories = $("#category");
 
 		$(document).ready(function() {
+
+			$("#shortDescription").richText();/* only this??? */
+			$("#fullDescription").richText();/* only this??? */
+
 			dropdownBrands.change(function() {
 				dropdownCategories.empty();
 				getCategories();
@@ -68,6 +86,39 @@
 							.appendTo(dropdownCategories);
 				})
 			})
+		}
+
+		function checkUnique(form) {
+			url = "[[@{/products/check_unique}]]";
+
+			productId = $("#id").val();
+			productName = $("#name").val();
+			csrfValue = $("input[name='_csrf']").val();
+			params = {
+				id : productId,
+				name : productName,
+				_csrf : csrfValue
+			};
+
+			$
+					.post(
+							url,
+							params,
+							function(response) {
+								console.log(response);
+								if (response == "OK") {
+									form.submit();
+								} else if (response == "Duplicated") {
+									showWarningModal("CategoryName is Duplicated! Input value is "
+											+ productName);
+								} else {
+									showErrorModal("Unknown Error Happened");
+								}
+							}).fail(function() {
+						showErrorModal("Error", "Could not connect server");
+					});
+			return false;
+
 		}
 	</script>
 	<script th:src="@{/js/common_form.js}"></script>

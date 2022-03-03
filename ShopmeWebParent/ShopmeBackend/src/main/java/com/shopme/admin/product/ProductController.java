@@ -68,20 +68,14 @@ public class ProductController {
 
 //
 	@PostMapping("/products/save")
-	public String saveCategory(Product product) throws IOException {
+	public String saveCategory(Product product, RedirectAttributes redirectAttributes) throws IOException {
 		System.out.println(product.getName());
 		System.out.println(product.getBrand().getName());
 		System.out.println(product.getCategory().getName());
-//		@RequestParam("fileImage") MultipartFile multipartFile,
-//		RedirectAttributes redirectAttributes
-//		String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());// \と/の違いを吸収するっぽい
-//		brand.setLogo(fileName);
-//		Brand savedBrand = productService.save(brand);
-//		String uploadDir = UPLOAD_BASE_DIR + "/" + savedBrand.getId();
-//		// 画像を更新する場合、既存の画像は削除
-//		FileUploadUtil.cleanDir(uploadDir);
-//		FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
-//		redirectAttributes.addFlashAttribute("msg", "The Brand has been saved successfully");
+
+		productService.save(product);
+
+		redirectAttributes.addFlashAttribute("msg", "The Product has been saved successfully");
 		return "redirect:/products";
 
 	}
