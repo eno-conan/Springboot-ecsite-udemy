@@ -69,23 +69,60 @@ public class ProductController {
 //
 	@PostMapping("/products/save")
 	public String saveCategory(Product product, RedirectAttributes redirectAttributes,
-			@RequestParam("fileImage") MultipartFile multipartFile) throws IOException {
+			@RequestParam("fileImage") MultipartFile mainImageMultipart,
+			@RequestParam("extraImage") MultipartFile[] extraImageMultiparts) throws IOException {
 
-		if (!multipartFile.isEmpty()) {
-			String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());// \と/の違いを吸収するっぽい
-			product.setMainImage(fileName);
-			Product savedproduct = productService.save(product);
-			String uploadDir = UPLOAD_BASE_DIR + "/" + savedproduct.getId();
+		setMainImageName(mainImageMultipart, product);
+		setExtraImageNames(extraImageMultiparts, product);
 
-			FileUploadUtil.cleanDir(uploadDir);
-			FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
-		} else {
-			productService.save(product);
-		}
-		productService.save(product);
+		Product savedproduct = productService.save(product);
+
+		saveUploadedImages(mainImageMultipart, extraImageMultiparts, savedproduct);
+
 		redirectAttributes.addFlashAttribute("msg", "The Product has been saved successfully");
 		return "redirect:/products";
 
+	}
+
+	private void setMainImageName(MultipartFile mainImageMultipart, Product product) {
+		if (!mainImageMultipart.isEmpty()) {
+			String fileName = StringUtils.cleanPath(mainImageMultipart.getOriginalFilename());// \と/の違いを吸収するっぽい
+			product.setMainImage(fileName);
+		}
+	}
+
+	private void setExtraImageNames(MultipartFile[] extraImageMultiparts, Product product) {
+		if (extraImageMultiparts.length > 0) {
+			for (MultipartFile multipartFile : extraImageMultiparts) {
+				if (!multipartFile.isEmpty()) {
+					String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+					product.addExtraImage(fileName);
+				}
+			}
+		}
+	}
+
+	private void saveUploadedImages(MultipartFile mainImageMultipart, MultipartFile[] extraImageMultiparts,
+			Product savedproduct) throws IOException {
+
+		if (!mainImageMultipart.isEmpty()) {
+			String fileName = StringUtils.cleanPath(mainImageMultipart.getOriginalFilename());
+			String uploadDir = UPLOAD_BASE_DIR + "/" + savedproduct.getId();
+
+			FileUploadUtil.cleanDir(uploadDir);
+			FileUploadUtil.saveFile(uploadDir, fileName, mainImageMultipart);
+		}
+
+		if (extraImageMultiparts.length > 0) {
+			String uploadDir = UPLOAD_BASE_DIR + "/" + savedproduct.getId() + "/extras";
+			for (MultipartFile multipartFile : extraImageMultiparts) {
+				if (multipartFile.isEmpty()) {
+					continue;
+				}
+				String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+				FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+			}
+		}
 	}
 
 //	@GetMapping("/categories/page/{pageNum}")

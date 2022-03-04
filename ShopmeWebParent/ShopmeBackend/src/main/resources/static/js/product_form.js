@@ -3,6 +3,8 @@ var extraImagesCount = 0;
 dropdownBrands = $("#brand");
 dropdownCategories = $("#category");
 
+/* read this after reading html DOM */
+/*document.addEventListener("DOMContentLoaded", function() {*/
 $(document).ready(function() {
 
 	$("#shortDescription").richText();/* only this??? */
@@ -44,6 +46,7 @@ function showExtraImageThumbnail(fileInput, index) {
 };
 
 function addNextExtraImageSection(index) {
+	console.log(index);
 	htmlExtraImage = `<div class="col border m-3 p-2" id="divExtraImage${index}">
 				<div id="extraImageHeader${index}">
 					<label>Extra Image# ${index + 1}</label>
@@ -70,7 +73,7 @@ function addNextExtraImageSection(index) {
 	$("#divProductImages").append(htmlExtraImage);
 
 	$("#extraImageHeader" + (index - 1)).append(htmlLinkRemove);
-	
+
 	extraImagesCount++;
 }
 
@@ -103,11 +106,11 @@ function checkUnique(form) {
 		_csrf: csrfValue
 	};
 
-	url = moduleURL + "/check_unique"; //apply
+	/*url = moduleURL + "/check_unique";*/ //apply
 	/*url = `[[@{/products/check_unique}]]`;*/ //not apply...
 	/*url = "[[@{/products/check_unique}]]";*/ //not apply...
 	$.post(
-		url,
+		checkUniqueURL,
 		params,
 		function(response) {
 			console.log(response);

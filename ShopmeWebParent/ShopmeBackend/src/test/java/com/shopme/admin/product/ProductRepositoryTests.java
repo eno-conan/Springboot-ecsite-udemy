@@ -91,4 +91,17 @@ public class ProductRepositoryTests {
 		assertThat(savedProduct.getImages().size()).isEqualTo(3);
 	}
 
+	@Test
+	public void testSaveProductWIthDetails() {
+		Integer productId = 1;
+		Product product = repo.findById(productId).get();
+
+		product.addDetail("", null);
+		product.addDetail("", null);
+		product.addDetail("", null);
+
+		Product savedProduct = repo.save(product);
+		assertThat(savedProduct.getDetails()).isNotEmpty();
+	}
+
 }

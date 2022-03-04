@@ -76,21 +76,28 @@ public class Product {
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
 	private Set<ProductImage> images = new HashSet<>();
 
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+	private Set<ProductDetail> details = new HashSet<>();
+
 	@Override
 	public String toString() {
 		return "Product [id=" + id + ", name=" + name + "]";
 	}
-	
+
 	public void addExtraImage(String imageName) {
 		this.images.add(new ProductImage(imageName, this));
 	}
-	
+
 	public String getMainImagePath() {
 		if ("image-thumbnail.png".equals(this.mainImage) || id == null) {
 			return "/images/image-thumbnail.png";
 		} else {
 			return "/product-images/" + this.id + "/" + this.mainImage;
 		}
+	}
+
+	public void addDetail(String name, String value) {
+		this.details.add(new ProductDetail(name, value, this));
 	}
 
 }
