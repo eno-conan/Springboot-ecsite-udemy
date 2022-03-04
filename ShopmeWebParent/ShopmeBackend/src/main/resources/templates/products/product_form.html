@@ -14,8 +14,8 @@
 		</div>
 
 		<form th:action="@{/products/save}" th:object="${product}"
-			method="post" enctype="multipart/form-data"
-			onsubmit="return checkUnique(this)"
+			onsubmit="return checkUnique(this)" method="post"
+			enctype="multipart/form-data"
 			style="max-width: 700px; margin: 0 auto">
 			<input type="hidden" th:field="*{id}">
 
@@ -61,70 +61,12 @@
 	</div>
 	<script type="text/javascript">
 		MAX_FILE_SIZE = 502400;//500KB
-	
+
 		moduleURL = "[[@{/products}]]"
 		brandModuleURL = "[[@{/brands}]]"
-
-		dropdownBrands = $("#brand");
-		dropdownCategories = $("#category");
-
-		$(document).ready(function() {
-
-			$("#shortDescription").richText();/* only this??? */
-			$("#fullDescription").richText();/* only this??? */
-
-			dropdownBrands.change(function() {
-				dropdownCategories.empty();
-				getCategories();
-			});
-		});
-
-		function getCategories() {
-			brandId = dropdownBrands.val();
-			url = brandModuleURL + "/" + brandId + "/categories";
-
-			$.get(url, function(responseJson) {
-				$.each(responseJson, function(index, category) {
-					/* index:start zero */
-					$("<option>").val(category.id).text(category.name)
-							.appendTo(dropdownCategories);
-				})
-			})
-		}
-
-		function checkUnique(form) {
-			url = "[[@{/products/check_unique}]]";
-
-			productId = $("#id").val();
-			productName = $("#name").val();
-			csrfValue = $("input[name='_csrf']").val();
-			params = {
-				id : productId,
-				name : productName,
-				_csrf : csrfValue
-			};
-
-			$
-					.post(
-							url,
-							params,
-							function(response) {
-								console.log(response);
-								if (response == "OK") {
-									form.submit();
-								} else if (response == "Duplicated") {
-									showWarningModal("CategoryName is Duplicated! Input value is "
-											+ productName);
-								} else {
-									showErrorModal("Unknown Error Happened");
-								}
-							}).fail(function() {
-						showErrorModal("Error", "Could not connect server");
-					});
-			return false;
-
-		}
+		defaultImageThumbnailSrc = "[[@{/images/image-thumbnail.png}]]"
 	</script>
 	<script th:src="@{/js/common_form.js}"></script>
+	<script th:src="@{/js/product_form.js}"></script>
 </body>
 </html>

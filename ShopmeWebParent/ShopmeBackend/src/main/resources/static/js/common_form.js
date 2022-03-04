@@ -4,15 +4,11 @@ $(document).ready(function() {
 	});
 
 	$("#fileImage").change(function() {
-		filesize = this.files[0].size;
 
-		if (filesize > (MAX_FILE_SIZE)) {
-			this.setCustomValidity("less than 1kB");
-			this.reportValidity();
-		} else {
-			this.setCustomValidity("");
-			showImageThumbnail(this);
+		if (!checkFileSize(this)) {
+			return;
 		}
+		showImageThumbnail(this);
 	});
 });
 
@@ -25,6 +21,21 @@ function showImageThumbnail(fileInput) {
 
 	reader.readAsDataURL(file);
 }
+
+/* add lesson-112*/
+function checkFileSize(fileInput) {
+	filesize = fileInput.files[0].size;
+
+	if (filesize > (MAX_FILE_SIZE)) {
+		fileInput.setCustomValidity("less than 1kB");
+		fileInput.reportValidity();
+		return false;
+	} else {
+		fileInput.setCustomValidity("");
+		return true;
+	}
+}
+
 
 function showModalDialog(title, message) {
 	$("#modalTitle").text(title);
