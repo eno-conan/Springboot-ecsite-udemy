@@ -80,13 +80,13 @@ public class CategoryController {
 	public String saveCategory(Category category, @RequestParam("fileImage") MultipartFile multipartFile,
 			RedirectAttributes redirectAttributes) throws IOException {
 		String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());// \と/の違いを吸収するっぽい
-		System.out.println(fileName);
-		category.setImage(fileName);
+		String fileNameFilledBySnake = fileName.replace(" ", "_");
+		category.setImage(fileNameFilledBySnake);
 		Category savedCategory = service.save(category);
 		String uploadDir = UPLOAD_BASE_DIR + "/" + savedCategory.getId();
 		// 画像を更新する場合、既存の画像は削除
 		FileUploadUtil.cleanDir(uploadDir);
-		FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+		FileUploadUtil.saveFile(uploadDir, fileNameFilledBySnake, multipartFile);
 		redirectAttributes.addFlashAttribute("msg", "The category has been saved successfully");
 		return "redirect:/categories";
 

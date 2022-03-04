@@ -53,12 +53,13 @@ public class BrandController {
 	public String saveCategory(Brand brand, @RequestParam("fileImage") MultipartFile multipartFile,
 			RedirectAttributes redirectAttributes) throws IOException {
 		String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());// \と/の違いを吸収するっぽい
-		brand.setLogo(fileName);
+		String fileNameFilledBySnake = fileName.replace(" ", "_");
+		brand.setLogo(fileNameFilledBySnake);
 		Brand savedBrand = brandService.save(brand);
 		String uploadDir = UPLOAD_BASE_DIR + "/" + savedBrand.getId();
 		// 画像を更新する場合、既存の画像は削除
 		FileUploadUtil.cleanDir(uploadDir);
-		FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+		FileUploadUtil.saveFile(uploadDir, fileNameFilledBySnake, multipartFile);
 		redirectAttributes.addFlashAttribute("msg", "The Brand has been saved successfully");
 		return "redirect:/brands";
 

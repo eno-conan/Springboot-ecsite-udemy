@@ -89,13 +89,13 @@ public class UserController {
 
 		if (!multipartFile.isEmpty()) {
 			String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());// \と/の違いを吸収するっぽい
-			System.out.println(fileName);
-			user.setPhotos(fileName);
+			String fileNameFilledBySnake = fileName.replace(" ", "_");
+			user.setPhotos(fileNameFilledBySnake);
 			User savedUser = service.save(user);
 			String uploadDir = UPLOAD_BASE_DIR + "/" + savedUser.getId();
 			// 画像を更新する場合、既存の画像は削除
 			FileUploadUtil.cleanDir(uploadDir);
-			FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+			FileUploadUtil.saveFile(uploadDir, fileNameFilledBySnake, multipartFile);
 		} else {
 			// 画像を必須にするのであれば、異なった処理が必要
 			service.save(user);

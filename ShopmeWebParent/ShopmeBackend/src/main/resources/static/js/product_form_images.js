@@ -7,6 +7,10 @@ $(document).ready(function() {
 	$("input[name='extraImage']").each(function(index) {
 		extraImagesCount++;
 		$(this).change(function() {
+			if (!checkFileSize(this)) {
+				return;
+			}
+
 			showExtraImageThumbnail(this, index)
 		});
 	});

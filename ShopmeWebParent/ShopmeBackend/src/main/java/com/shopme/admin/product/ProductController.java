@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -18,9 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.shopme.admin.FileUploadUtil;
 import com.shopme.admin.brand.BrandService;
-import com.shopme.admin.category.CategoryService;
 import com.shopme.common.entity.Brand;
-import com.shopme.common.entity.Category;
 import com.shopme.common.entity.Product;
 
 @Controller
@@ -30,9 +26,6 @@ public class ProductController {
 
 	@Autowired
 	private ProductService productService;
-
-	@Autowired
-	private CategoryService categoryService;
 
 	@Autowired
 	private BrandService brandService;
@@ -70,10 +63,13 @@ public class ProductController {
 	@PostMapping("/products/save")
 	public String saveCategory(Product product, RedirectAttributes redirectAttributes,
 			@RequestParam("fileImage") MultipartFile mainImageMultipart,
-			@RequestParam("extraImage") MultipartFile[] extraImageMultiparts) throws IOException {
+			@RequestParam("extraImage") MultipartFile[] extraImageMultiparts,
+			@RequestParam(name = "detailNames", required = false) String[] detailNames,
+			@RequestParam(name = "detailValues", required = false) String[] detailValues) throws IOException {
 
 		setMainImageName(mainImageMultipart, product);
 		setExtraImageNames(extraImageMultiparts, product);
+		setProductDetails(detailNames, detailValues, product);
 
 		Product savedproduct = productService.save(product);
 
@@ -87,7 +83,8 @@ public class ProductController {
 	private void setMainImageName(MultipartFile mainImageMultipart, Product product) {
 		if (!mainImageMultipart.isEmpty()) {
 			String fileName = StringUtils.cleanPath(mainImageMultipart.getOriginalFilename());// \と/の違いを吸収するっぽい
-			product.setMainImage(fileName);
+			String fileNameFilledBySnake = fileName.replace(" ", "_");
+			product.setMainImage(fileNameFilledBySnake);
 		}
 	}
 
@@ -96,7 +93,8 @@ public class ProductController {
 			for (MultipartFile multipartFile : extraImageMultiparts) {
 				if (!multipartFile.isEmpty()) {
 					String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-					product.addExtraImage(fileName);
+					String fileNameFilledBySnake = fileName.replace(" ", "_");
+					product.addExtraImage(fileNameFilledBySnake);
 				}
 			}
 		}
@@ -107,10 +105,11 @@ public class ProductController {
 
 		if (!mainImageMultipart.isEmpty()) {
 			String fileName = StringUtils.cleanPath(mainImageMultipart.getOriginalFilename());
+			String fileNameFilledBySnake = fileName.replace(" ", "_");
 			String uploadDir = UPLOAD_BASE_DIR + "/" + savedproduct.getId();
 
 			FileUploadUtil.cleanDir(uploadDir);
-			FileUploadUtil.saveFile(uploadDir, fileName, mainImageMultipart);
+			FileUploadUtil.saveFile(uploadDir, fileNameFilledBySnake, mainImageMultipart);
 		}
 
 		if (extraImageMultiparts.length > 0) {
@@ -120,7 +119,23 @@ public class ProductController {
 					continue;
 				}
 				String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-				FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+				String fileNameFilledBySnake = fileName.replace(" ", "_");
+				FileUploadUtil.saveFile(uploadDir, fileNameFilledBySnake, multipartFile);
+			}
+		}
+	}
+
+	private void setProductDetails(String[] detailNames, String[] detailValues, Product product) {
+		if (detailNames == null || detailNames.length == 0) {
+			return;
+		}
+
+		for (int count = 0; count < detailNames.length; count++) {
+			String name = detailNames[count];
+			String value = detailValues[count];
+
+			if (!name.isEmpty() && !value.isEmpty()) {
+				product.addDetail(name, value);
 			}
 		}
 	}
