@@ -37,12 +37,12 @@ public class ProductController {
 		return "products/products";
 	}
 
-	@GetMapping("/products/edit/{id}")
-	public String editProduct(@PathVariable(name = "id") Integer id, Model model,
-			RedirectAttributes redirectAttributes) {
-		System.out.println(id);
-		return "index";
-	}
+//	@GetMapping("/products/edit/{id}")
+//	public String editProduct(@PathVariable(name = "id") Integer id, Model model,
+//			RedirectAttributes redirectAttributes) {
+//		System.out.println(id);
+//		return "index";
+//	}
 //	memo:id,main-image,product name,brand,category,enabled,excel-edit-delete
 
 	@GetMapping("/products/new")
@@ -137,6 +137,24 @@ public class ProductController {
 			if (!name.isEmpty() && !value.isEmpty()) {
 				product.addDetail(name, value);
 			}
+		}
+	}
+
+	@GetMapping("products/edit/{id}")
+	public String editProduct(@PathVariable("id") Integer id, Model model, RedirectAttributes redirectAttributes) {
+		try {
+			Product product = productService.get(id);
+			List<Brand> brands = brandService.listAll();
+
+			model.addAttribute("product", product);
+			model.addAttribute("brands", brands);
+			model.addAttribute("pageTitle", "Edit Product (ID: " + id + ")");
+
+			return "products/product_form";
+
+		} catch (ProductNotFoundException e) {
+			redirectAttributes.addFlashAttribute("message", e.getMessage());
+			return "redirect:/products";
 		}
 	}
 

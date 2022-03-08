@@ -12,10 +12,24 @@ $(document).ready(function() {
 		dropdownCategories.empty();
 		getCategories();
 	});
-	
-	getCategories();
+
+	getCategoriesForNewForm();
 
 });
+
+function getCategoriesForNewForm() {
+	ctgrIdField = $("#categoryId");
+	editMode = false;
+
+	if (ctgrIdField.length) {
+		editMode = true;
+	}
+
+	if (!editMode) {
+		getCategories();
+	}
+
+}
 
 function getCategories() {
 	brandId = dropdownBrands.val();

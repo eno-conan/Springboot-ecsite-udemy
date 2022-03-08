@@ -9,6 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -35,8 +36,13 @@ public class ProductImage {
 		this.product = product;
 	}
 
-	@ManyToOne //one product has many pictures.
+	@ManyToOne // one product has many pictures.
 	@JoinColumn(name = "product_id")
 	private Product product;
+
+	@Transient
+	public String getImagePath() {
+		return "/product-images/" + this.product.getId() + "/extras/" + this.name;
+	}
 
 }

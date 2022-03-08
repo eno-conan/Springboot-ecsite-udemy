@@ -17,7 +17,9 @@
 			onsubmit="return checkUnique(this)" method="post"
 			enctype="multipart/form-data"
 			style="max-width: 700px; margin: 0 auto">
-			<input type="hidden" th:field="*{id}">
+			<input type="hidden" th:field="*{id}" /> <input
+				th:if="${product.category != null}" type="hidden" id="categoryId"
+				th:value="${product.category.id}" />
 
 			<ul class="nav nav-tabs" id="myTab" role="tab">
 				<li class="nav-item"><a class="nav-link active"
@@ -46,9 +48,7 @@
 					<div th:replace="products/product_details::content"></div>
 					<div>
 						<input type="button" class="btn btn-secondary"
-							value="Add More Detail"
-							onclick="addNextDetailSection()"
-							>
+							value="Add More Detail" onclick="addNextDetailSection()">
 					</div>
 				</div>
 				<div class="tab-pane p-3" id="shipping" role="tabpanel">
