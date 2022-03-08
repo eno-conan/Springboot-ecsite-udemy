@@ -145,10 +145,12 @@ public class ProductController {
 		try {
 			Product product = productService.get(id);
 			List<Brand> brands = brandService.listAll();
+			Integer numberOfExistingExtraImages = product.getImages().size();
 
 			model.addAttribute("product", product);
 			model.addAttribute("brands", brands);
 			model.addAttribute("pageTitle", "Edit Product (ID: " + id + ")");
+			model.addAttribute("numberOfExistingExtraImages", numberOfExistingExtraImages);
 
 			return "products/product_form";
 
