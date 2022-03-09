@@ -31,6 +31,12 @@ public class ProductImage {
 
 	}
 
+	public ProductImage(Integer id, String name, Product product) {
+		this.id = id;
+		this.name = name;
+		this.product = product;
+	}
+
 	public ProductImage(String imageName, Product product) {
 		this.name = imageName;
 		this.product = product;
