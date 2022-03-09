@@ -37,11 +37,15 @@
 				class="table table-bordered table-striped table-hover table-responsive-xl">
 				<thead class="thead-dark">
 					<tr>
-						<th>ID</th>
+						<th
+							th:replace="fragments::column_link('/products','id','ID','none')" />
 						<th>Main Image</th>
-						<th>Product Name</th>
-						<th>Brand</th>
-						<th>Categories</th>
+						<th
+							th:replace="fragments::column_link('/products','name','Product Name','none')" />
+						<th
+							th:replace="fragments::column_link('/products','brand','Brand','none')" />
+						<th
+							th:replace="fragments::column_link('/products','category','Category','none')" />
 						<th>Enabled</th>
 						<th></th>
 					</tr>
@@ -53,7 +57,7 @@
 							style="max-width: 200px; margin: 0 auto"></td>
 						<td><a class="link-detail"
 							th:href="@{'/products/detail/' + ${product.id}}"
-							title="View Details of this product">[[${product.name}]]</a></td>
+							th:title="${product.name}">[[${product.shortName}]]</a></td>
 						<td>[[${product.brand.name}]]</td>
 						<td>[[${product.category.name}]]</td>
 						<td><a th:if="${product.enabled == true }"
@@ -78,53 +82,24 @@
 			</div>
 		</div>
 
-		<!-- <div class="text-center m-2" th:if="${totalItems > 0}">
-			<span> Showing Users [[${startCount}]] to [[${endCount}]] of
-				[[${totalItems}]]</span>
-		</div>
-		<div class="text-center m-2" th:unless="${totalItems > 0}">
-			<span>No Users Found</span>
-		</div>
-
-		<div th:if="${totalPages > 1}">
-			<nav aria-label="Page navigation example">
-				<ul class="pagination justify-content-center">
-					<li
-						th:class="${currentPage > 1 ? 'page-item':'page-item disabled'}"><a
-						th:replace="fragments::page_link(1,'First')"></a></li>
-					<li
-						th:class="${currentPage > 1 ? 'page-item':'page-item disabled'}">
-						<a
-						th:replace="fragments::page_link(${currentPage - 1},'Previous')"></a>
-					</li>
-
-					<li th:class="${currentPage !=i ? 'page-item':'page-item active'}"
-						th:each="i : ${#numbers.sequence(1,totalPages)}"><a
-						th:replace="fragments::page_link(${i},${i})"></a>
-					<li
-						th:class="${currentPage < totalPages ? 'page-item':'page-item disabled'}">
-						<a th:replace="fragments::page_link(${currentPage + 1},'Next')"></a>
-					</li>
-					<li
-						th:class="${currentPage < totalPages ? 'page-item':'page-item disabled'}">
-						<a th:replace="fragments::page_link(${totalPages},'Last')"></a>
-					</li>
-				</ul>
-			</nav>
-		</div> -->
+		<div th:replace="fragments::pagination('/products','Products')"></div>
 
 		<div th:replace="fragments::footer"></div>
 	</div>
 	<script type="text/javascript">
 		moduleURL = "[[@{/products}]]";
 
-		$(document).ready(function() {
-			$(".link-detail").on("click", function(e) {
-				e.preventDefault();
-				linkDetailURL = $(this).attr("href");
-				$("#detailModal").modal("show").find(".modal-content").load(linkDetailURL);
-			});
-		});
+		$(document).ready(
+				function() {
+					$(".link-detail").on(
+							"click",
+							function(e) {
+								e.preventDefault();
+								linkDetailURL = $(this).attr("href");
+								$("#detailModal").modal("show").find(
+										".modal-content").load(linkDetailURL);
+							});
+				});
 		function clearFilter() {
 			window.location = "[[@{/products}]]";
 		}

@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -116,6 +117,14 @@ public class Product {
 		}
 
 		return false;
+	}
+
+	@Transient
+	public String getShortName() {
+		if (name.length() > 50) {
+			return name.substring(0, 50).concat("...");
+		}
+		return name;
 	}
 
 }

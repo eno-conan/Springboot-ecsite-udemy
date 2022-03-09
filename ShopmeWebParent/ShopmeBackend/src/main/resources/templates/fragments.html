@@ -19,22 +19,19 @@
 
 <body>
 	<!-- 項目ごとに昇順・降順で表示するための矢印に紐づく処理 -->
-	<th th:fragment="column_link(fieldName,columnLabel)">
+	<th
+		th:fragment="column_link(moduleURL,fieldName,columnLabel,removeTag)"
+		th:remove="${removeTag}">
 		<!--  同じカラムで昇順・降順を繰り返す間： 
 		sortField != fieldName は常にfalse->これまで通り、パラメータのasc/descをリバースするだけ--> <!--  あるカラムから別のカラムのソート行う場合： 
 		sortField != fieldName がtrue->あるカラムの昇順・降順の状態は引き継いで、ソート対象を別のカラムにする--> <a
 		class="text-white"
-		th:href="@{'/users/page/' + ${currentPage} + 
+		th:href="@{${moduleURL} +'/page/' + ${currentPage} + 
 		'?sortField=' + ${fieldName} + '&sortDir=' + ${sortField != fieldName ? sortDir : reverseSortDir} + 
 		${keyword != null?'&keyword=' + keyword : ''}}">[[${columnLabel}]]
 	</a> <span th:if="${sortField == fieldName}"
 		th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
 	</th>
-
-	<!-- ページング -->
-	<a th:fragment="page_link(pageNum,label)" class="page-link"
-		th:href="@{'/users/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + 
-		${keyword != null?'&keyword=' + keyword : ''}}">[[${label}]]</a>
 
 	<!-- edit part -->
 	<a th:fragment="edit(module,path)" class="fas fa-edit fa-2x icon-green"
@@ -44,6 +41,51 @@
 	<a th:fragment="delete(module,id,path)"
 		class="fas fa-trash fa-2x icon-red" th:href="@{${path}}"
 		th:entityId="${id}" th:title="'Delete This ' + ${module}"></a>
+
+	<!-- paging -->
+	<a th:fragment="page_link(moduleURL,pageNum,label)" class="page-link"
+		th:href="@{${moduleURL} + '/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + 
+		${keyword != null?'&keyword=' + keyword : ''}}">[[${label}]]</a>
+
+	<div th:fragment="pagination(moduleURL,entityName)" th:remove="tag">
+		<div class="text-center m-2" th:if="${totalItems > 0}">
+			<span> Showing [[${entityName}]] [[${startCount}]] to
+				[[${endCount}]] of [[${totalItems}]]</span>
+		</div>
+		<div class="text-center m-2" th:unless="${totalItems > 0}">
+			<span>No [[${entityName}]] Found</span>
+		</div>
+
+		<div th:if="${totalPages > 1}">
+			<nav aria-label="Page navigation example">
+				<ul class="pagination justify-content-center">
+					<li
+						th:class="${currentPage > 1 ? 'page-item':'page-item disabled'}"><a
+						th:replace="fragments::page_link(${moduleURL},1,'First')"></a></li>
+					<li
+						th:class="${currentPage > 1 ? 'page-item':'page-item disabled'}">
+						<a
+						th:replace="fragments::page_link(${moduleURL},${currentPage - 1},'Previous')"></a>
+					</li>
+
+					<li th:class="${currentPage !=i ? 'page-item':'page-item active'}"
+						th:each="i : ${#numbers.sequence(1,totalPages)}"><a
+						th:replace="fragments::page_link(${moduleURL},${i},${i})"></a>
+					<li
+						th:class="${currentPage < totalPages ? 'page-item':'page-item disabled'}">
+						<a
+						th:replace="fragments::page_link(${moduleURL},${currentPage + 1},'Next')"></a>
+					</li>
+					<li
+						th:class="${currentPage < totalPages ? 'page-item':'page-item disabled'}">
+						<a
+						th:replace="fragments::page_link(${moduleURL},${totalPages},'Last')"></a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+
+	</div>
 
 	<!-- フッター -->
 	<div th:fragment="footer">

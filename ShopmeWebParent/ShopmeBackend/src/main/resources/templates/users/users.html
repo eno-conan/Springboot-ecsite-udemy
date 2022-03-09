@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments::page_head('User List')"></head>
+<head th:replace="fragments::page_head('User List','none')"></head>
 <body>
 	<div class="container-fluid">
 		<div th:replace="navigation::menu"></div>
@@ -36,11 +36,16 @@
 				class="table table-bordered table-striped table-hover table-responsive-xl">
 				<thead class="thead-dark">
 					<tr>
-						<th th:replace="fragments::column_link('id','User ID')"></th>
+						<th class="hideable-column"><th
+							th:replace="fragments::column_link('/users','id','User ID','tag')"></th>
+						</th>
 						<th>Photos</th>
-						<th th:replace="fragments::column_link('email','E-mail')"></th>
-						<th th:replace="fragments::column_link('FirstName','First Name')"></th>
-						<th th:replace="fragments::column_link('LastName','Last Name')"></th>
+						<th class="hideable-column"><th
+							th:replace="fragments::column_link('/users','email','E-mail','tag')">
+						</th><th
+							th:replace="fragments::column_link('/users','FirstName','First Name','none')"></th>
+						<th
+							th:replace="fragments::column_link('/users','LastName','Last Name','none')"></th>
 						<th>Roles</th>
 						<th>Enabled</th>
 						<th></th>
@@ -49,13 +54,10 @@
 				<tbody>
 					<tr th:each="user:${users}">
 						<td>[[${user.id}]]</td>
-						<td>
-							<span
-							th:if="${user.photos == null}"
+						<td><span th:if="${user.photos == null}"
 							class="fas fa-portrait fa-2x icon-dark"></span> <img
 							th:if="${user.photos != null}"
-							th:src="@{${user.photosImagePath}}">
-						</td>
+							th:src="@{${user.photosImagePath}}"></td>
 						<td>[[${user.email}]]</td>
 						<td>[[${user.firstName}]]</td>
 						<td>[[${user.LastName}]]</td>
@@ -66,47 +68,14 @@
 							class="fas fa-check-circle fa-2x icon-dark" href=""></a></td>
 						<td><a class="fas fa-edit fa-2x icon-green"
 							th:href="@{'/users/edit/' + ${user.id}}" title="Edit This User"></a>
-							&nbsp;<a class="fas fa-trash fa-2x icon-red" th:href="@{'/users/delete/' + ${user.id}}"></a></td>
+							&nbsp;<a class="fas fa-trash fa-2x icon-red"
+							th:href="@{'/users/delete/' + ${user.id}}"></a></td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
 
-		<div class="text-center m-2" th:if="${totalItems > 0}">
-			<span> Showing Users [[${startCount}]] to [[${endCount}]] of
-				[[${totalItems}]]</span>
-		</div>
-		<div class="text-center m-2" th:unless="${totalItems > 0}">
-			<span>No Users Found</span>
-		</div>
-
-		<div th:if="${totalPages > 1}">
-			<nav aria-label="Page navigation example">
-				<ul class="pagination justify-content-center">
-					<li
-						th:class="${currentPage > 1 ? 'page-item':'page-item disabled'}"><a
-						th:replace="fragments::page_link(1,'First')"></a></li>
-					<li
-						th:class="${currentPage > 1 ? 'page-item':'page-item disabled'}">
-						<a
-						th:replace="fragments::page_link(${currentPage - 1},'Previous')"></a>
-					</li>
-
-					<li th:class="${currentPage !=i ? 'page-item':'page-item active'}"
-						th:each="i : ${#numbers.sequence(1,totalPages)}"><a
-						th:replace="fragments::page_link(${i},${i})"></a>
-					<li
-						th:class="${currentPage < totalPages ? 'page-item':'page-item disabled'}">
-						<a th:replace="fragments::page_link(${currentPage + 1},'Next')"></a>
-					</li>
-					<li
-						th:class="${currentPage < totalPages ? 'page-item':'page-item disabled'}">
-						<a th:replace="fragments::page_link(${totalPages},'Last')"></a>
-					</li>
-				</ul>
-			</nav>
-		</div>
-
+		<div th:replace="fragments::pagination('/users','Users')"></div>
 		<div th:replace="fragments::footer"></div>
 	</div>
 	<script type="text/javascript">

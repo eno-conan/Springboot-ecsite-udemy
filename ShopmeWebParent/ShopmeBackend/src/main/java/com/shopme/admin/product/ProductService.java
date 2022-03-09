@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.shopme.common.entity.Product;
@@ -12,7 +16,7 @@ import com.shopme.common.entity.Product;
 @Service
 public class ProductService {
 
-	public static final int CATEGORIES_PER_PAGE = 4;
+	public static final int PRODUCTS_PER_PAGE = 5;
 
 	@Autowired
 	private ProductRepository repo;
@@ -20,6 +24,18 @@ public class ProductService {
 	public List<Product> listAll() {
 		List<Product> products = (List<Product>) repo.findAll();
 		return products;
+	}
+
+	public Page<Product> listAllByPage(int pageNum, String sortField, String sortDir, String keyword) {
+		Sort sort = Sort.by(sortField);
+
+		sort = "asc".equals(sortDir) ? sort.ascending() : sort.descending();
+
+		Pageable pageable = PageRequest.of(pageNum - 1, PRODUCTS_PER_PAGE, sort);
+		if (keyword != null) {
+			return repo.findAll(keyword, pageable);
+		}
+		return repo.findAll(pageable);
 	}
 
 	public Product save(Product product) {
