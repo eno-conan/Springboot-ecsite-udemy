@@ -46,14 +46,6 @@ public class ProductController {
 		return "products/products";
 	}
 
-//	@GetMapping("/products/edit/{id}")
-//	public String editProduct(@PathVariable(name = "id") Integer id, Model model,
-//			RedirectAttributes redirectAttributes) {
-//		System.out.println(id);
-//		return "index";
-//	}
-//	memo:id,main-image,product name,brand,category,enabled,excel-edit-delete
-
 	@GetMapping("/products/new")
 	public String newCategory(Model model) {
 		List<Brand> brands = brandService.listAll();
@@ -94,7 +86,7 @@ public class ProductController {
 		return "redirect:/products";
 
 	}
-	
+
 	private void setProductDetails(String[] detailIDs, String[] detailNames, String[] detailValues, Product product) {
 		if (detailNames == null || detailNames.length == 0) {
 			return;
@@ -219,6 +211,30 @@ public class ProductController {
 			return "redirect:/products";
 		}
 	}
+
+	@GetMapping("products/detail/{id}")
+	public String viewProductDetail(@PathVariable("id") Integer id, Model model,
+			RedirectAttributes redirectAttributes) {
+		try {
+			Product product = productService.get(id);
+
+			model.addAttribute("product", product);
+
+			return "products/product_detail_modal";
+
+		} catch (ProductNotFoundException e) {
+			redirectAttributes.addFlashAttribute("message", e.getMessage());
+			return "redirect:/products";
+		}
+	}
+
+//	@GetMapping("/products/edit/{id}")
+//	public String editProduct(@PathVariable(name = "id") Integer id, Model model,
+//			RedirectAttributes redirectAttributes) {
+//		System.out.println(id);
+//		return "index";
+//	}
+//	memo:id,main-image,product name,brand,category,enabled,excel-edit-delete
 
 //	@GetMapping("/categories/page/{pageNum}")
 //	public String listAllByPage(@PathVariable(name = "pageNum") int pageNum, Model model,

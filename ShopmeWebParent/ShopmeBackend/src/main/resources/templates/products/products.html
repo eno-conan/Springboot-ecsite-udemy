@@ -51,14 +51,16 @@
 						<td>[[${product.id}]]</td>
 						<td><img alt="No-image" th:src="@{${product.mainImagePath}}"
 							style="max-width: 200px; margin: 0 auto"></td>
-						<td>[[${product.name}]]</td>
+						<td><a class="link-detail"
+							th:href="@{'/products/detail/' + ${product.id}}"
+							title="View Details of this product">[[${product.name}]]</a></td>
 						<td>[[${product.brand.name}]]</td>
 						<td>[[${product.category.name}]]</td>
 						<td><a th:if="${product.enabled == true }"
 							class="fas fa-check-circle fa-2x" href=""></a><a
 							th:if="${product.enabled != true }"
 							class="fas fa-check-circle fa-2x icon-dark" href=""></a></td>
-						<td><a class="fas fa-file-alt fa-2x icon-green"
+						<td><a class="fas fa-file-alt fa-2x icon-green link-detail"
 							th:href="@{'/products/detail/' + ${product.id}}"
 							title="View Details of this product"></a> &nbsp; <a
 							th:replace="fragments::edit('products','/products/edit/' + ${product.id})"></a>&nbsp;
@@ -68,6 +70,12 @@
 					</tr>
 				</tbody>
 			</table>
+		</div>
+
+		<div class="modal fade" id="detailModal">
+			<div class="modal-dialog modal-xl">
+				<div class="modal-content"></div>
+			</div>
 		</div>
 
 		<!-- <div class="text-center m-2" th:if="${totalItems > 0}">
@@ -108,6 +116,15 @@
 		<div th:replace="fragments::footer"></div>
 	</div>
 	<script type="text/javascript">
+		moduleURL = "[[@{/products}]]";
+
+		$(document).ready(function() {
+			$(".link-detail").on("click", function(e) {
+				e.preventDefault();
+				linkDetailURL = $(this).attr("href");
+				$("#detailModal").modal("show").find(".modal-content").load(linkDetailURL);
+			});
+		});
 		function clearFilter() {
 			window.location = "[[@{/products}]]";
 		}
