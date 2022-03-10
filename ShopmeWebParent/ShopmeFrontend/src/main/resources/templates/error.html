@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments :: page_head('Shop me','none')" />
-<meta charset="UTF-8">
-<title>Welcome</title>
+<head th:replace="fragments :: page_head('Error - Shopme me','none')"></head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
 </head>
-
-
-
 <body>
 	<div class="container-fluid">
 		<div th:replace="navigation :: header_menu"></div>
-		<h1>Welcome!!! EC site</h1>
+		<div class="m-3">
+			<h2>Sorry,unexpected error has occured</h2>
+		</div>
 		<div th:replace="navigation :: footer_menu"></div>
 	</div>
 </body>

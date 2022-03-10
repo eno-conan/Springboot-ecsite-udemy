@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: page_head('Error - Shopme me','none')"></head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+	<div class="container-fluid">
+		<div th:replace="navigation :: header_menu"></div>
+		<div class="m-3">
+			<h2>Sorry,you the server has encountered an error while
+				processing your request</h2>
+		</div>
+		<div th:replace="navigation :: footer_menu"></div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="page_head(title,remove)" th:remove="${remove}">
+<!--  -->
+<meta http-equiv="X-Content-Type" content="text/html" charset="UTF-8">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
+<title>[[${title}]]</title>
+<link rel="stylesheet"
+	th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+<script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script type="text/javascript"
+	th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</head>
+
+<body>
+	<!-- 項目ごとに昇順・降順で表示するための矢印に紐づく処理 -->
+	<th
+		th:fragment="column_link(moduleURL,fieldName,columnLabel,removeTag)"
+		th:remove="${removeTag}">
+		<!--  同じカラムで昇順・降順を繰り返す間： 
+		sortField != fieldName は常にfalse->これまで通り、パラメータのasc/descをリバースするだけ--> <!--  あるカラムから別のカラムのソート行う場合： 
+		sortField != fieldName がtrue->あるカラムの昇順・降順の状態は引き継いで、ソート対象を別のカラムにする--> <a
+		class="text-white"
+		th:href="@{${moduleURL} +'/page/' + ${currentPage} + 
+		'?sortField=' + ${fieldName} + '&sortDir=' + ${sortField != fieldName ? sortDir : reverseSortDir} + 
+		${keyword != null?'&keyword=' + keyword : ''}}">[[${columnLabel}]]
+	</a> <span th:if="${sortField == fieldName}"
+		th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
+	</th>
+
+	<!-- edit part -->
+	<a th:fragment="edit(module,path)" class="fas fa-edit fa-2x icon-green"
+		th:href="@{${path}}" th:title="'Edit This ' + ${module}"></a>
+
+	<!-- delete part -->
+	<a th:fragment="delete(module,id,path)"
+		class="fas fa-trash fa-2x icon-red" th:href="@{${path}}"
+		th:entityId="${id}" th:title="'Delete This ' + ${module}"></a>
+
+	<!-- paging -->
+	<a th:fragment="page_link(moduleURL,pageNum,label)" class="page-link"
+		th:href="@{${moduleURL} + '/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + 
+		${keyword != null?'&keyword=' + keyword : ''}}">[[${label}]]</a>
+
+	<div th:fragment="pagination(moduleURL,entityName)" th:remove="tag">
+		<div class="text-center m-2" th:if="${totalItems > 0}">
+			<span> Showing [[${entityName}]] [[${startCount}]] to
+				[[${endCount}]] of [[${totalItems}]]</span>
+		</div>
+		<div class="text-center m-2" th:unless="${totalItems > 0}">
+			<span>No [[${entityName}]] Found</span>
+		</div>
+
+		<div th:if="${totalPages > 1}">
+			<nav aria-label="Page navigation example">
+				<ul class="pagination justify-content-center">
+					<li
+						th:class="${currentPage > 1 ? 'page-item':'page-item disabled'}"><a
+						th:replace="fragments::page_link(${moduleURL},1,'First')"></a></li>
+					<li
+						th:class="${currentPage > 1 ? 'page-item':'page-item disabled'}">
+						<a
+						th:replace="fragments::page_link(${moduleURL},${currentPage - 1},'Previous')"></a>
+					</li>
+
+					<li th:class="${currentPage !=i ? 'page-item':'page-item active'}"
+						th:each="i : ${#numbers.sequence(1,totalPages)}"><a
+						th:replace="fragments::page_link(${moduleURL},${i},${i})"></a>
+					<li
+						th:class="${currentPage < totalPages ? 'page-item':'page-item disabled'}">
+						<a
+						th:replace="fragments::page_link(${moduleURL},${currentPage + 1},'Next')"></a>
+					</li>
+					<li
+						th:class="${currentPage < totalPages ? 'page-item':'page-item disabled'}">
+						<a
+						th:replace="fragments::page_link(${moduleURL},${totalPages},'Last')"></a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+
+	</div>
+
+	<!-- フッター -->
+</body>
+</html>
