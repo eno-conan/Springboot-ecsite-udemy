@@ -37,10 +37,13 @@
 				class="table table-bordered table-striped table-hover table-responsive-xl">
 				<thead class="thead-dark">
 					<tr>
-						<th th:replace="fragments::column_link('id','ID')"></th>
+						<th
+							th:replace="fragments::column_link('/categories','id','ID','none')"></th>
 						<th>Category image</th>
-						<th><a class="text-white" th:href="@{'/categories?sortDir=asc'}">Category Name</a></th>
-						<th th:replace="fragments::column_link('alias','Alias')"></th>
+						<th><a class="text-white"
+							th:href="@{'/categories?sortDir=asc'}">Category Name</a></th>
+						<th
+							th:replace="fragments::column_link('/categories','alias','Alias','none')"></th>
 						<th>Enabled</th>
 						<th></th>
 					</tr>

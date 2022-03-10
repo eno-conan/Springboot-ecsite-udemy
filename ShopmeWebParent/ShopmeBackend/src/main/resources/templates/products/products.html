@@ -1,15 +1,18 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head th:replace="fragments::page_head('Products','none')"></head>
 <body>
 	<div class="container-fluid">
 		<div th:replace="navigation::menu"></div>
 		<div>
 			<h2>Products</h2>
-			<a th:href="@{/products/new}">Create New Products</a>&nbsp;
+			<th:block sec:authorize="hasAnyAuthority('Admin','Editor')">
+				<a th:href="@{/products/new}">Create New Products</a>&nbsp;
 			<!--|&nbsp; <a
 				th:href="@{/users/export/csv}">Export to Csv</a> &nbsp;|&nbsp; <a
 				th:href="@{/users/export/pdf}">Export to PDF</a> -->
+			</th:block>
 		</div>
 		<div th:if="${msg != null}" class="alert alert-success text-center">[[${msg}]]</div>
 
@@ -46,7 +49,10 @@
 							th:replace="fragments::column_link('/products','brand','Brand','none')" />
 						<th
 							th:replace="fragments::column_link('/products','category','Category','none')" />
-						<th>Enabled</th>
+						<th:block
+							sec:authorize="hasAnyAuthority('Admin','Editor')">
+							<th>Enabled</th>
+						</th:block>
 						<th></th>
 					</tr>
 				</thead>
@@ -60,16 +66,22 @@
 							th:title="${product.name}">[[${product.shortName}]]</a></td>
 						<td>[[${product.brand.name}]]</td>
 						<td>[[${product.category.name}]]</td>
-						<td><a th:if="${product.enabled == true }"
-							class="fas fa-check-circle fa-2x" href=""></a><a
-							th:if="${product.enabled != true }"
-							class="fas fa-check-circle fa-2x icon-dark" href=""></a></td>
+						<th:block sec:authorize="hasAnyAuthority('Admin','Editor')">
+							<td><a th:if="${product.enabled == true }"
+								class="fas fa-check-circle fa-2x" href=""></a><a
+								th:if="${product.enabled != true }"
+								class="fas fa-check-circle fa-2x icon-dark" href=""></a></td>
+						</th:block>
 						<td><a class="fas fa-file-alt fa-2x icon-green link-detail"
 							th:href="@{'/products/detail/' + ${product.id}}"
-							title="View Details of this product"></a> &nbsp; <a
-							th:replace="fragments::edit('products','/products/edit/' + ${product.id})"></a>&nbsp;
-							<a
-							th:replace="fragments::delete('products',${product.id},'/products/edit/' + ${product.id})"></a>
+							title="View Details of this product"></a> 
+						<th:block sec:authorize="hasAnyAuthority('Admin','Editor','SalesPerson')">
+							&nbsp; <a th:replace="fragments::edit('products','/products/edit/' + ${product.id})"></a>
+						</th:block> 
+						&nbsp; 
+						<th:block sec:authorize="hasAnyAuthority('Admin','Editor')">
+							<a th:replace="fragments::delete('products',${product.id},'/products/edit/' + ${product.id})"></a>
+						</th:block>
 						</td>
 					</tr>
 				</tbody>
