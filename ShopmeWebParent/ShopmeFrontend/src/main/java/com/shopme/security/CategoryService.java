@@ -30,4 +30,25 @@ public class CategoryService {
 		return listNoChildrenCategories;
 	}
 
+	public Category getCategory(String alias) {
+		return repo.findByAliasEnabled(alias);
+	}
+
+	public List<Category> getCategoryParents(Category child) {
+		List<Category> listParents = new ArrayList<>();
+
+		Category parent = child.getParent();
+		// retrieve parent category name
+		// child -> parent -> grandparent...
+		while (parent != null) {
+			listParents.add(0, parent);
+			parent = parent.getParent();
+		}
+
+		listParents.add(child);
+
+		return listParents;
+
+	}
+
 }

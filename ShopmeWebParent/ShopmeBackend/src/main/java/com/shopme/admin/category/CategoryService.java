@@ -15,7 +15,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.shopme.common.entity.Category;
-import com.shopme.common.entity.User;
 
 @Service
 public class CategoryService {

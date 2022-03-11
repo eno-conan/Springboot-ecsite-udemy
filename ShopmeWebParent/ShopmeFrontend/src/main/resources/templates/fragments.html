@@ -15,30 +15,6 @@
 </head>
 
 <body>
-	<!-- 項目ごとに昇順・降順で表示するための矢印に紐づく処理 -->
-	<th
-		th:fragment="column_link(moduleURL,fieldName,columnLabel,removeTag)"
-		th:remove="${removeTag}">
-		<!--  同じカラムで昇順・降順を繰り返す間： 
-		sortField != fieldName は常にfalse->これまで通り、パラメータのasc/descをリバースするだけ--> <!--  あるカラムから別のカラムのソート行う場合： 
-		sortField != fieldName がtrue->あるカラムの昇順・降順の状態は引き継いで、ソート対象を別のカラムにする--> <a
-		class="text-white"
-		th:href="@{${moduleURL} +'/page/' + ${currentPage} + 
-		'?sortField=' + ${fieldName} + '&sortDir=' + ${sortField != fieldName ? sortDir : reverseSortDir} + 
-		${keyword != null?'&keyword=' + keyword : ''}}">[[${columnLabel}]]
-	</a> <span th:if="${sortField == fieldName}"
-		th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
-	</th>
-
-	<!-- edit part -->
-	<a th:fragment="edit(module,path)" class="fas fa-edit fa-2x icon-green"
-		th:href="@{${path}}" th:title="'Edit This ' + ${module}"></a>
-
-	<!-- delete part -->
-	<a th:fragment="delete(module,id,path)"
-		class="fas fa-trash fa-2x icon-red" th:href="@{${path}}"
-		th:entityId="${id}" th:title="'Delete This ' + ${module}"></a>
-
 	<!-- paging -->
 	<a th:fragment="page_link(moduleURL,pageNum,label)" class="page-link"
 		th:href="@{${moduleURL} + '/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + 
