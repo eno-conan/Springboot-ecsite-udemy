@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<body>
+	<div th:fragment="content" class="col">
+		<div>
+			<a th:href="@{'/p/' + ${product.alias}}"> <img
+				style="width: 150px;" th:src="@{${product.mainImagePath}}" /> <br />
+				<b>[[${product.shortName}]]</b>
+			</a>
+		</div>
+		<div th:if="${product.discountPercent <=0 }">
+			<span>[[${product.intPrice}]] yen</span>
+		</div>
+		<div th:if="${product.discountPercent > 0}">
+			<span style="font-size: larger; color: darkred">[[${product.discountPrice}]]
+				yen</span>
+			<del>
+				<span>[[${product.intPrice}]] yen</span>
+			</del>
+		</div>
+	</div>
+</body>
+</html>
