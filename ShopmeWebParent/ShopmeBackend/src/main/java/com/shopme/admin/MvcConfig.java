@@ -20,8 +20,9 @@ public class MvcConfig implements WebMvcConfigurer {
 		String categoriesImageDirName = "../category-images";
 		String brandsImageDirName = "../brand-logos";
 		String productsImageDirName = "../product-images";
+		String siteLogoDirName = "../sute-logo";
 		List<String> dirNames = composeImagesDirNameList(userImageDirName, categoriesImageDirName, brandsImageDirName,
-				productsImageDirName);
+				productsImageDirName, siteLogoDirName);
 		for (String dirname : dirNames) {
 			addResouceFromDirName(dirname, registory);
 		}

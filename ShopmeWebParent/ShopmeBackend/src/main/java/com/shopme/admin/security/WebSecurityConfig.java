@@ -53,7 +53,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/products/new", "/products/delete").hasAnyAuthority("Admin","Editor")
 				.antMatchers("/products/edit/**", "/products/save","/products/check_unique").hasAnyAuthority("Admin", "SalesPerson", "Editor")
 				.antMatchers("/products", "/products/","/products/detail/**","/products/page/**").hasAnyAuthority("Admin", "SalesPerson", "Editor", "Shipper")
-				.antMatchers("/products/**").hasAnyAuthority("Admin","Editor").anyRequest().authenticated()
+				.antMatchers("/products/**").hasAnyAuthority("Admin","Editor")
+				.antMatchers("/settings/**").hasAuthority("Admin").anyRequest().authenticated()
 				.and().formLogin().loginPage("/login").usernameParameter("email").permitAll().and()
 				.logout().permitAll().and().rememberMe().key("Abcdefghijkl_123456789")
 				.tokenValiditySeconds(60 * 60 * 24 * 7);
