@@ -2,6 +2,7 @@ package com.shopme.admin.setting;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -28,12 +29,12 @@ public class SettingController {
 	private SettingService settingService;
 
 	@Autowired
-	private CurrencyRepository currencyRepository;
+	private CurrencyRepository currencyRepo;
 
 	@GetMapping("/settings")
 	public String listAll(Model model) {
 		List<Setting> listsSettings = settingService.listAllSettings();
-		List<Currency> listCurrencies = currencyRepository.findAllByOrderByNameAsc();
+		List<Currency> listCurrencies = currencyRepo.findAllByOrderByNameAsc();
 		model.addAttribute("listCurrencies", listCurrencies);
 
 		for (Setting setting : listsSettings) {
@@ -47,16 +48,49 @@ public class SettingController {
 	public String saveGeneralSettings(@RequestParam("fileImage") MultipartFile multipartFile,
 			HttpServletRequest request, RedirectAttributes redirectAttributes) throws IOException {
 
+		GeneralSettingBag settingBag = settingService.getGeneralSettings();
+		saveSiteLogo(multipartFile, settingBag);
+		saveCurrencySymbol(request, settingBag);
+		updateSettingValuesFromForm(request, settingBag.getListSettings());
+
+		redirectAttributes.addFlashAttribute("msg", "General Setting have been saved successfully");
+		return "redirect:/settings";
+
+	}
+
+	// these private method will fix at another class?
+	private void saveSiteLogo(MultipartFile multipartFile, GeneralSettingBag settingBag) throws IOException {
 		if (!multipartFile.isEmpty()) {
 			String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
 			String fileNameFilledBySnake = fileName.replace(" ", "_");
+			String value = "/site-logo/" + fileNameFilledBySnake;
+			settingBag.updateSiteLogo(value);
+
 			String uploadDir = UPLOAD_BASE_DIR;
 
 			FileUploadUtil.cleanDir(uploadDir);
 			FileUploadUtil.saveFile(uploadDir, fileNameFilledBySnake, multipartFile);
 		}
-		return "redirect:/settings";
+	}
 
+	private void saveCurrencySymbol(HttpServletRequest request, GeneralSettingBag settingBag) {
+		Integer currencyId = Integer.parseInt(request.getParameter("CURRENCY_ID"));
+		Optional<Currency> findByIdResult = currencyRepo.findById(currencyId);
+
+		if (findByIdResult.isPresent()) {
+			Currency currency = findByIdResult.get();
+			settingBag.updateCurrencySymbol(currency.getSymbol());
+		}
+	}
+
+	private void updateSettingValuesFromForm(HttpServletRequest request, List<Setting> listSetting) {
+		for (Setting setting : listSetting) {
+			String value = request.getParameter(setting.getKey());
+			if (value != null) {
+				setting.setValue(value);
+			}
+		}
+		settingService.saveAll(listSetting);
 	}
 
 }

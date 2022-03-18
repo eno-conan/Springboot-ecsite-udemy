@@ -12,6 +12,7 @@
 		<div>
 			<h2>Site Setting</h2>
 		</div>
+		<div th:if="${msg != null}" class="alert alert-success text-center">[[${msg}]]</div>
 		<div>
 			<ul class="nav nav-tabs" id="settingTab" role="tabList">
 				<li class="nav-item"><a class="nav-link active"

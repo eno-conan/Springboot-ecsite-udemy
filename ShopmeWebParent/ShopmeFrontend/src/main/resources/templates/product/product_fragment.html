@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <body>
 	<div th:fragment="content" class="col">
 		<div>
@@ -9,7 +9,12 @@
 			</a>
 		</div>
 		<div th:if="${product.discountPercent <=0 }">
-			<span>[[${product.intPrice}]] yen</span>
+			<span> <span
+				th:if="${CURRENCY_SYMBOL_POSITION == 'Before price'}"
+				th:remove="tag">[[${CURRENCY_SYMBOL}]]</span>[[${product.intPrice}]]
+				<span th:if="${CURRENCY_SYMBOL_POSITION == 'After price'}"
+				th:remove="tag">[[${CURRENCY_SYMBOL}]]</span>
+			</span>
 		</div>
 		<div th:if="${product.discountPercent > 0}">
 			<span style="font-size: larger; color: darkred">[[${product.discountPrice}]]

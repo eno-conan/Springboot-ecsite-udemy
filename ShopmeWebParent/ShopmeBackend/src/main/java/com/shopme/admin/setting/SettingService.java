@@ -13,17 +13,17 @@ import com.shopme.common.entity.SettingCategory;
 public class SettingService {
 
 	@Autowired
-	private SettingRepository settingRepository;
+	private SettingRepository settingRepo;
 
 	public List<Setting> listAllSettings() {
-		return (List<Setting>) settingRepository.findAll();
+		return (List<Setting>) settingRepo.findAll();
 	}
 
 	public GeneralSettingBag getGeneralSettings() {
 		List<Setting> settings = new ArrayList<>();
 
-		List<Setting> generalSettings = settingRepository.findByCategory(SettingCategory.GENERAL);
-		List<Setting> currencySettings = settingRepository.findByCategory(SettingCategory.CURRENCY);
+		List<Setting> generalSettings = settingRepo.findByCategory(SettingCategory.GENERAL);
+		List<Setting> currencySettings = settingRepo.findByCategory(SettingCategory.CURRENCY);
 
 		settings.addAll(generalSettings);
 		settings.addAll(currencySettings);
@@ -33,6 +33,6 @@ public class SettingService {
 	}
 
 	public void saveAll(Iterable<Setting> settings) {
-		settingRepository.saveAll(settings);
+		settingRepo.saveAll(settings);
 	}
 }

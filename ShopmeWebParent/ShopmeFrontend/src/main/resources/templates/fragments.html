@@ -6,7 +6,7 @@
 <meta http-equiv="X-Content-Type" content="text/html" charset="UTF-8">
 <meta name="viewport"
 	content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
-<title>[[${title}]]</title>
+<title>[[${title}]] - [[${SITE_NAME}]]</title>
 <link rel="stylesheet"
 	th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
 <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
@@ -61,5 +61,11 @@
 	</div>
 
 	<!-- フッター -->
+	<div th:fragment="footer">
+		<hr>
+		<div class="text-center">
+			<p>[[${COPYRIGHT}]]</p>
+		</div>
+	</div>
 </body>
 </html>
