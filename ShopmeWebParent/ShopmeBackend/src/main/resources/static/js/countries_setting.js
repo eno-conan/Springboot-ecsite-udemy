@@ -65,11 +65,16 @@ function deleteCountry() {
 	optionValue = dropDownCountry.val();
 	countryId = optionValue.split("-")[0];
 	url = contextPath + "countries/delete/" + countryId;
-
-	$.get(url, function() {
+	
+	$.ajax({
+		type: 'DELETE',
+		url: url,
+		beforeSend: function(xhr) {
+			xhr.setRequestHeader(csrfHeaderName, csrfValue);
+		}
+	}).done(function() {
 		$("#dropDownCountries option[value='" + optionValue + "']").remove();
 		changeFormStateToNew();
-	}).done(function() {
 		showToastMessage("the Country has been deleted");
 	}).fail(function() {
 		showToastMessage("Couldn't connect server");
