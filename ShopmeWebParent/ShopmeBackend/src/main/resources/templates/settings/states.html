@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div th:fragment="content" th:remove="tag">
+		<div>
+			<p>display country when user register</p>
+		</div>
+		<div>
+			<input type="button" value="Load Country List"
+				id="buttonLoadCountriesForStates" class="btn btn-primary m-2">
+		</div>
+		<div class="form-group row">
+			<label class="col-form-label pl-3" id="labelCountryNameForStates">Country
+				Name</label>
+			<div class="col-md">
+				<select class="form-control m-2" id="dropDownCountriesForStates">
+				</select>
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-form-label pl-3" id="labelStateName">State
+				Name</label>
+			<div class="col-md">
+				<select class="form-control m-2" style="height: 300px;" size="3"
+					id="dropDownStatesRelatedCountry">
+				</select>
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-form-label pl-3" id="labelStateName">State
+				Name</label>
+			<div class="col-md">
+				<input type="text" class="form-control" id="fieldStateName" />
+			</div>
+			<div class="col-lg-4">
+				<input type="button" id="buttonAddState" value="Add"
+					class="btn btn-primary"> <input type="button"
+					id="buttonUpdateState" value="Update" class="btn btn-success"
+					disabled="disabled"> <input type="button"
+					id="buttonDeleteState" value="Delete" class="btn btn-danger"
+					disabled="disabled">
+			</div>
+		</div>
+		<div class="toast justify-content-center d-flex" role="alert"
+			aria-live="assertive" aria-atomic="true" data-delay="10000">
+			<div role="alert" aria-live="assertive" aria-atomic="true">
+				<div class="toast-body">
+					<span id="toastMessageForState"></span>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</body>
+</html>
+

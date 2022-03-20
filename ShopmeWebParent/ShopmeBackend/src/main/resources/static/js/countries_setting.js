@@ -44,6 +44,23 @@ $(document).ready(function() {
 	})
 });
 
+function loadCountries() {
+	url = contextPath + "countries/list";
+	$.get(url, function(responseJson) {
+		dropDownCountry.empty();
+
+		$.each(responseJson, function(index, country) {
+			optionValue = country.id + "-" + country.code;
+			$("<option>").val(optionValue).text(country.name).appendTo(dropDownCountry);
+		});
+	}).done(function() {
+		buttonLoad.val("refresh");
+		showToastMessage("Loaded All Countries");
+	}).fail(function() {
+		showToastMessage("Couldn't connect server");
+	});
+}
+
 function deleteCountry() {
 	optionValue = dropDownCountry.val();
 	countryId = optionValue.split("-")[0];
@@ -143,25 +160,7 @@ function changeFormStateToSelectedCountry() {
 	fieldCountryCode.val(countryCode);
 };
 
-
-function loadCountries() {
-	url = contextPath + "countries/list";
-	$.get(url, function(responseJson) {
-		dropDownCountry.empty();
-
-		$.each(responseJson, function(index, country) {
-			optionValue = country.id + "-" + country.code;
-			$("<option>").val(optionValue).text(country.name).appendTo(dropDownCountry);
-		});
-	}).done(function() {
-		buttonLoad.val("refresh");
-		showToastMessage("Loaded All Countries");
-	}).fail(function() {
-		showToastMessage("Couldn't connect server");
-	});
-}
-
 function showToastMessage(message) {
-	$("#toastMessage").text(message);
+	$("#toastMessageCountry").text(message);
 	$(".toast").toast('show');
 }

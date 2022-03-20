@@ -11,4 +11,5 @@ public interface StateRepository extends CrudRepository<State, Integer> {
 
 	public List<State> findAllByCountryOrderByNameAsc(Country country);
 
+
 }
