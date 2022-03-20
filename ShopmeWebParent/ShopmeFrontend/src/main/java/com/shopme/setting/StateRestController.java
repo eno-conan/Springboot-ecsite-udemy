@@ -1,4 +1,4 @@
-package com.shopme.admin.setting.state;
+package com.shopme.setting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ public class StateRestController {
 	@Autowired
 	private StateRepository stateRepo;
 
-	@GetMapping("/states/list_by_country/{id}")
+	@GetMapping("/settings/list_states_by_country/{id}")
 	public List<StateDTO> listByCountry(@PathVariable("id") Integer countryId) {
 		List<State> listStates = stateRepo.findAllByCountryOrderByNameAsc(new Country(countryId));
 		List<StateDTO> result = new ArrayList<StateDTO>();

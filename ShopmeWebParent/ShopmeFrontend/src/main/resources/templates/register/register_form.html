@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: page_head(${pageTitle},'none')" />
+<meta charset="UTF-8">
+<title>Welcome</title>
+</head>
+<body>
+	<div class="container-fluid">
+		<div th:replace="navigation :: header_menu"></div>
+		<h1>Customer Registration</h1>
+		<form th:action="@{/create_customer}" method="post"
+			th:object="${customer}" style="max-width: 600px; margin: 0 auto">
+			<div class="border border-secondary rounded p-3">
+				<div class="form-group row">
+					<label class="col-sm-4 col-form-label">First Name</label>
+					<div class="col-sm-8">
+						<input type="text" class="form-control" th:field="*{firstName}"
+							required maxlength="45">
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-sm-4 col-form-label">Last Name</label>
+					<div class="col-sm-8">
+						<input type="text" class="form-control" th:field="*{lastName}"
+							required maxlength="45">
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-sm-4 col-form-label">E-mail</label>
+					<div class="col-sm-8">
+						<input type="email" class="form-control" th:field="*{email}"
+							required maxlength="45">
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-sm-4 col-form-label">Password</label>
+					<div class="col-sm-8">
+						<input type="password" class="form-control" th:field="*{password}"
+							required maxlength="64" minlength="4"
+							oninput="checkPasswordMatch(document.getElementById('confirmPassword'))">
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-sm-4 col-form-label">ReType Password</label>
+					<div class="col-sm-8">
+						<input type="password" class="form-control" id="comfirmPassword"
+							required maxlength="64" minlength="4"
+							oninput="checkPasswordMatch(this)">
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-sm-4 col-form-label">Phone Number</label>
+					<div class="col-sm-8">
+						<input type="text" class="form-control" th:field="*{phoneNumber}"
+							required maxlength="10">
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-sm-4 col-form-label">Address Line 1</label>
+					<div class="col-sm-8">
+						<input type="text" class="form-control" th:field="*{addressLine1}"
+							required maxlength="64">
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-sm-4 col-form-label">Address Line 2</label>
+					<div class="col-sm-8">
+						<input type="text" class="form-control" th:field="*{addressLine2}"
+							maxlength="64">
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-sm-4 col-form-label">City</label>
+					<div class="col-sm-8">
+						<input type="text" class="form-control" th:field="*{city}"
+							required maxlength="45">
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-sm-4 col-form-label">Country</label>
+					<div class="col-sm-8">
+						<select class="form-control" th:field="*{country}">
+							<th:block th:each=" country :${listCountries}">
+								<option th:value="${country.id}">[[${country.name}]]</option>
+							</th:block>
+						</select>
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-sm-4">State</label>
+					<div class="col-sm-8">
+						<input type="text" class="form-control" th:field="*{state}"
+							required maxlength="64" list="listStates">
+						<datalist id="listStates"></datalist>
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-sm-4">Postal Code</label>
+					<div class="col-sm-8">
+						<input type="text" class="form-control" th:field="*{postalCode}"
+							required maxlength="10">
+					</div>
+				</div>
+				<div class="text-center">
+					<input type="submit" value="Create Account" class="btn btn-success">
+				</div>
+			</div>
+
+		</form>
+		<div th:replace="navigation :: footer_menu"></div>
+	</div>
+	<script type="text/javascript">
+		contextPath = "[[@{/}]]"
+		var dropDownCountry;
+		var dataListState;
+
+		$(document).ready(function() {
+			dropDownCountry = $("#country");
+			dataListState = $("#listStates");
+			fieldState = $("#state");
+			dropDownCountry.on("change", function() {
+				loadStatesForCountry();
+				fieldState.val("").focus();
+			});
+		});
+
+		function loadStatesForCountry() {
+			selectedCountry = $("#country option:selected");
+			countryId = selectedCountry.val();
+			url = contextPath + "settings/list_states_by_country/" + countryId;
+			$.get(url, function(responseJson) {
+				dataListState.empty();
+
+				$.each(responseJson, function(index, state) {
+					$("<option>").val(state.name).text(state.name).appendTo(
+							dataListState);
+				});
+			});
+		}
+
+		function checkPasswordMatch(confirmPassword) {
+			if (confirmPassword.value != $("#password").val()) {
+				confirmPassword.setCustomValidity("passwords do not match");
+			} else {
+				confirmPassword.setCustomValidity("");
+			}
+
+		}
+	</script>
+</body>
+</html>
