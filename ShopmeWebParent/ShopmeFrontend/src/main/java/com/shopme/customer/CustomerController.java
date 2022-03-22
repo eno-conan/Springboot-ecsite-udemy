@@ -1,4 +1,4 @@
-package com.shopme.admin.customer;
+package com.shopme.customer;
 
 import java.util.List;
 

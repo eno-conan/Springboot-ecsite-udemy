@@ -1,4 +1,4 @@
-package com.shopme.admin.customer;
+package com.shopme.customer;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

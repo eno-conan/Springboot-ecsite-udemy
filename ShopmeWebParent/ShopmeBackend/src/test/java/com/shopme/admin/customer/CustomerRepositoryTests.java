@@ -74,6 +74,24 @@ public class CustomerRepositoryTests {
 //		assertEquals(customer.getLastName(), "updateLast");
 	}
 
+	@Test
+	public void testFindByVerificationCode() {
+		String verificationCode = "testcode_123";
+		Customer customer = customerRepo.findByVerificationCode(verificationCode);
+		assertThat(customer).isNotNull();
+		assertThat(customer.getId()).isEqualTo(2);
+
+	}
+
+	@Test
+	public void testEnabled() {
+		Integer customerId = 1;
+		customerRepo.enabled(customerId);
+		Customer customer = customerRepo.findById(1).get();
+		assertThat(customer.isEnabled()).isEqualTo(true);
+
+	}
+
 	private Customer generateCustomerData() {
 		Customer testCustomer = new Customer();
 
