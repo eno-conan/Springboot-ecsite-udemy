@@ -13,7 +13,7 @@ public class Utility {
 	public static String getSiteURL(HttpServletRequest request) {
 		String siteURL = request.getRequestURL().toString();
 		return siteURL.replace(request.getServletPath(), "");
-	}
+	}	
 
 	public static JavaMailSenderImpl prepareMailSender(EmailSettingBag settings) {
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();

@@ -65,7 +65,7 @@ function deleteCountry() {
 	optionValue = dropDownCountry.val();
 	countryId = optionValue.split("-")[0];
 	url = contextPath + "countries/delete/" + countryId;
-	
+
 	$.ajax({
 		type: 'DELETE',
 		url: url,
@@ -109,7 +109,21 @@ function updateCountry() {
 	});
 }
 
+function validateFormCountry() {
+	formCountry = document.getElementById("formCountry");
+	if (!formCountry.checkValidity()) {
+		formCountry.reportValidity();
+		return false;
+	}
+	return true;
+}
+
+
 function addCountry() {
+	if (!validateFormCountry()) {
+		return;
+	}
+
 	url = contextPath + "countries/save";
 	countryName = fieldCountryName.val();
 	countryCode = fieldCountryCode.val();

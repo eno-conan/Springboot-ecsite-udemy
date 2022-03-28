@@ -80,14 +80,27 @@ function loadStatesSelectedCountry() {
 	});
 }
 
+function validateFormState() {
+	formState = document.getElementById("formState");
+	if (!formState.checkValidity()) {
+		formState.reportValidity();
+		return false;
+	}
+	return true;
+}
+
 function addState() {
+	if (!validateFormState()) {
+		return;
+	}
+
 	url = contextPath + "states/save";
 	selectedCountry = $("#dropDownCountriesForStates option:selected");
 	countryId = selectedCountry.val();
 	countryName = selectedCountry.text();
 	stateName = fieldStateName.val();
-	
-	jsonData = { name: stateName, country: { id: countryId, name: countryName }};
+
+	jsonData = { name: stateName, country: { id: countryId, name: countryName } };
 	$.ajax({
 		type: 'POST',
 		url: url,
@@ -121,13 +134,17 @@ function deleteState() {
 
 
 function updateState() {
+	if (!validateFormState()) {
+		return;
+	}
+
 	url = contextPath + "countries/save";
 	countryName = fieldCountryName.val();
 
 	countryId = dropDownCountry.val().split("-")[0];
 
 	jsonData = { id: countryId, name: countryName, code: countryCode };
-	
+
 	$.ajax({
 		type: 'POST',
 		url: url,
